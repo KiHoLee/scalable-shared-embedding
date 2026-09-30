@@ -1,0 +1,11 @@
+{
+ "device": "cuda",
+ "V": 65536,
+ "params_sse": 320,
+ "params_full": 4194560,
+ "param_ratio": 13108.0,
+ "rx_macs_sse": 1024,
+ "rx_macs_full": 4194304,
+ "train_s_sse": 13.484020948410034,
+ "train_s_full": 108.42666935920715
+}

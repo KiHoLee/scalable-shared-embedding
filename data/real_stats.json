@@ -1,0 +1,22 @@
+{
+ "vocab_size": 30522,
+ "n_texts": 2000,
+ "frames": 24998,
+ "repeats": 24,
+ "decisions_per_point": 2399808,
+ "distinct_tokens": 10486,
+ "max_token_id": 29599,
+ "headlines_scored": 1948,
+ "recovery": {
+  "10": {
+   "SSE": 6.416837782340863e-05,
+   "Full": 0.0,
+   "OMA": 0.0
+  },
+  "16": {
+   "SSE": 0.03516427104722793,
+   "Full": 0.0,
+   "OMA": 0.025859856262833675
+  }
+ }
+}

@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.DS_Store
+data/full_V4096.pt
+data/*_long*.pt

@@ -1,0 +1,5 @@
+{
+ "max_pairwise_coherence": 0.6965398192405701,
+ "mean_abs_correlation": 0.10012295236811042,
+ "dict": "V=65536, dim=64, seed 12345"
+}
