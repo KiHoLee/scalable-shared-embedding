@@ -234,6 +234,31 @@ def fig_scaling():
     save(fig, "fig_scaling_revision")
 
 
+def fig_norms():
+    """Letter Fig. R3: distribution of the masked candidate norms of the
+    proposal relative to the per-user mean (rev_norms.csv, 64 values),
+    with the full-codebook range (rev_norms_full.json) marked by its two
+    extremes on the same axis."""
+    import json
+    rows = read(rp.DATA / "rev_norms.csv")
+    rel = np.array([float(r["norm_rel"]) for r in rows])
+    fj = json.load(open(rp.DATA / "rev_norms_full.json"))
+    fig, ax = plt.subplots()
+    c, _, _, lb = rp.STY["SSE"]
+    ax.hist(rel, bins=np.linspace(0.95, 1.03, 17), color=c, alpha=0.85,
+            edgecolor="white", linewidth=0.4, label=lb)
+    cf, _, ls, lbf = rp.STY["Full"]
+    for k, v in enumerate((fj["rel_min"], fj["rel_max"])):
+        ax.axvline(v, color=cf, linestyle=ls, linewidth=1.3,
+                   label=f"{lbf} extremes" if k == 0 else None)
+    ax.set_xlabel("Masked norm / per-user mean")
+    ax.set_ylabel("Count")
+    ax.set_xlim(0.3, 1.55)
+    ax.set_xticks([0.4, 0.6, 0.8, 1.0, 1.2, 1.4])
+    ax.legend(loc="upper left", labelspacing=0.25, borderpad=0.3)
+    save(fig, "fig_norms_revision")
+
+
 if __name__ == "__main__":
     import sys
     for name in (sys.argv[1:] or ["snr", "scaling", "conv", "real"]):
