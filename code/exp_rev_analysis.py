@@ -15,6 +15,9 @@ On the trained main model (data/sse_P4.pt, Vu=16, P=4, V=65,536):
   A5  rho_u in closed form from (B, mu, c) against its
       Monte Carlo estimate                                    -> rev_rho.json
 Scaling and factorization studies (models trained here, same budget):
+  A6  isotropy of the interference: variance along the
+      difference directions (b_i - b_j) . mu_u relative to
+      rho_u (mean, max, min ratio per user)                  -> rev_isotropy.json
   S1  fixed Vu=16, P in {1,2,4,8}: measured SER and bound    -> rev_scaleP.csv
   S2  fixed V=65,536, (Vu,P) in {(256,2),(16,4),(4,8),(2,16)}
       plus the full codebook (P=1)                          -> rev_factor.csv
@@ -158,9 +161,49 @@ def rho_mc(model, n=400_000):
     return rho, stats
 
 
+@torch.no_grad()
+def isotropy(model):
+    """Second-moment matrix of the interference of one period over uniform
+    digits, then the variance along every candidate direction (-> rho_u)
+    and along every difference direction, which the pairwise error
+    probability of Proposition 1 actually sees."""
+    Bn, m = model.unit_codebook().double(), model.masks().double()
+    s = 1.0 / (float(model.c) * math.sqrt(model.P))
+    out = []
+    for u in range(model.users):
+        M = torch.zeros(model.L, model.L, dtype=torch.float64, device=Bn.device)
+        mean = torch.zeros(model.L, dtype=torch.float64, device=Bn.device)
+        for v in range(model.users):
+            if v == u:
+                continue
+            X = s * (Bn * m[v])
+            mv = X.mean(0)
+            M += X.T @ X / model.vu - torch.outer(mv, mv)
+            mean += mv
+        M += torch.outer(mean, mean)
+        cand = Bn * m[u]
+        nk = cand / cand.norm(dim=1, keepdim=True)
+        rho = float(torch.einsum("kl,lm,km->k", nk, M, nk).mean())
+        ratios = []
+        for i in range(model.vu):
+            for j in range(model.vu):
+                if i != j:
+                    d = cand[i] - cand[j]
+                    d = d / d.norm()
+                    ratios.append(float(d @ M @ d) / rho)
+        out.append({"user": u, "rho": rho, "ratio_mean": sum(ratios) / len(ratios),
+                    "ratio_max": max(ratios), "ratio_min": min(ratios)})
+    return out
+
+
 def main():
     set_seed(1)
     sse = load_sse(4, 16, "sse_P4.pt")
+
+    # A6 isotropy of the interference along difference directions
+    iso = isotropy(sse)
+    json.dump(iso, open(DATA / "rev_isotropy.json", "w"), indent=1)
+    print("[A6]", iso, flush=True)
 
     # A1 masked norms
     with torch.no_grad():
