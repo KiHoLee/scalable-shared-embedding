@@ -3,7 +3,7 @@
 Code and raw results for
 
 > K.-H. Lee, H.-H. Choi, and J.-R. Lee, "Scaling Shared-Embedding Multiple
-> Access to Large Token Vocabularies via Periodic Codebook Reuse,"
+> Access to Large Vocabularies via Periodic Codebook Reuse,"
 > submitted to *IEEE Wireless Communications Letters*.
 
 The construction divides a d-dimensional embedding frame into P periods,
