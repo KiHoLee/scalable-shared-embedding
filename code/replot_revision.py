@@ -33,7 +33,7 @@ rp.STY.update({
     "Hier":    ("#1e8449", "h", (0, (6, 1.5, 1, 1.5, 1, 1.5)),
                 "Hierarchical softmax"),
     "OMA":     ("#7f8c8d", "^", (0, (1.5, 1, 1.5, 1, 4, 1)), "OMA"),
-    "UB":      ("#c0392b", "",  (0, (1, 1)), "Union bound"),
+    "UB":      ("#c0392b", "",  (0, (1, 1)), "Union bound (SSE)"),
     "Clean":   ("#000000", "",  (0, (1, 1)), "Error-free text"),
 })
 # 8:6 axes box on the shared 8:6 canvas (width 0.79, height 0.79)
