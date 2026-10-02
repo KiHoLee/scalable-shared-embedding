@@ -36,7 +36,7 @@ with the fixed seeds when they are missing.
 | CSI-aware retraining (response letter, R1.6) | `exp_rev_csitrain.py` | `rev_csitrain.csv` |
 | Real AG News streams (Sec. IV, letter Fig. R1 via `replot_revision.py real`) | `exp_rev_semantic.py` | `rev_semantic.csv`, `rev_energy.json` |
 | Original-submission experiments (not in the revised manuscript) | `exp_main.py`, `exp_sota.py`, `exp_real.py`, `exp_scaling_dense.py`, `exp_sse_bestP.py`, `exp_att_seeds.py`, `exp_d128.py`, `exp_lmmse.py`, `replot.py` | `convergence.csv`, `real_ter.csv`, `real_stats.json`, `sota_real.csv`, `scaling_att_seeds.csv`, `d128_snr.json`, `curve_*.json` |
-| Masked-norm histogram (response letter, Fig. R3, `replot_revision.py norms`) | `exp_rev_analysis.py`, `exp_rev_fullmd.py` | `rev_norms.csv`, `rev_norms_full.json` |
+| Masked-norm histogram (response letter, Fig. R2, `replot_revision.py norms`) | `exp_rev_analysis.py`, `exp_rev_fullmd.py` | `rev_norms.csv`, `rev_norms_full.json` |
 | Seed spread | `exp_rev_seeds.py`, `exp_rev_seeds_long.py` | `rev_seeds_sse.csv`, `rev_seeds_sse_20k.csv` |
 | Fixed-load user sweep | `exp_rev_users_fixedload.py` | `rev_users_fixedload.csv` |
 | Vocabulary sweep | `replot_revision.py scaling` | `scaling.csv`, `scaling_sse_P.csv`, `rev_scaling_fullmd.csv` |
