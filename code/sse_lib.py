@@ -41,6 +41,7 @@ D = 64          # embedding dimension (real)
 U = 4           # users
 VU = 16         # unit codebook size
 P_MAX = 4       # periods for the main configuration, V = 16^4 = 65536
+BITS = P_MAX * int(math.log2(VU))   # index bits per user per frame (16); OMA rate
 SEED = 1
 
 TRAIN_ITERS = 4000
@@ -297,7 +298,7 @@ def eval_ser_full(model: FullCodebook, snr_list, frames: int = 2_000_000,
 # conventional digital scheme: OMA with BPSK per real dimension (QPSK
 # per complex subcarrier under the declared real-imaginary stacking)
 # ----------------------------------------------------------------------
-def oma_ser(snr_db_list, bits: int = 16, n_grid: int = 200_000):
+def oma_ser(snr_db_list, bits: int = BITS, n_grid: int = 200_000):
     """Semi-analytic expression under the real-dimension convention.
     All bits of a vocabulary symbol share the same flat-fading gain, so
     SER = E_h[1 - (1 - Q(h sqrt(snr)))^bits] with h^2 ~ Exp(1); the
@@ -314,7 +315,7 @@ def oma_ser(snr_db_list, bits: int = 16, n_grid: int = 200_000):
 
 
 @torch.no_grad()
-def oma_ser_mc(snr_db_list, bits: int = 16, frames: int = 2_000_000,
+def oma_ser_mc(snr_db_list, bits: int = BITS, frames: int = 2_000_000,
                chunk: int = 200_000, seed: int = 777):
     """Monte Carlo check of the closed form (same channel conventions)."""
     out = []

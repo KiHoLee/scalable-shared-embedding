@@ -2,7 +2,8 @@
 dictionary, and save() of replot.py and writes the revised figures with
 the _revision suffix (the original figures stay untouched):
 
-  fig_conv_revision.pdf : SER at 10 dB versus cumulative training MACs,
+  fig_conv_revision.pdf : SER at 10 dB versus cumulative training MACs
+                          (mean of three training seeds),
                           Proposed SSE, Full codebook, Sampled softmax,
                           Hierarchical softmax, 200,000 iterations each
                           (rev_budget_curve_*.csv), ToDMA/OMA references
@@ -57,7 +58,7 @@ def save(fig, name):
             continue
         L = lg.get_window_extent(r).expanded(1.02, 1.04)
         for ln in ax.lines:
-            P = ax.transData.transform(ln.get_xydata())
+            P = ln.get_transform().transform(ln.get_xydata())
             P = P[np.isfinite(P).all(1)]
             if len(P) < 2:
                 continue
@@ -97,7 +98,8 @@ def fig_conv():
     fig, ax = plt.subplots()
     for key, fn in (("SSE", "sse"), ("Full", "full"), ("Sampled", "sampled"),
                     ("Hier", "hier")):
-        rows = read(rp.DATA / f"rev_budget_curve_{fn}.csv")
+        # 3-seed mean (exp_rev_budget_eval.py) of the logged curves
+        rows = read(rp.DATA / f"rev_budget_curve_{fn}_mean.csv")
         x = np.array([float(r["macs"]) for r in rows])
         # full-codebook variants are decoded by minimum distance
         col = "ser10_md" if "ser10_md" in rows[0] else "ser10"
@@ -255,7 +257,7 @@ def fig_norms():
     ax.set_ylabel("Count")
     ax.set_xlim(0.3, 1.55)
     ax.set_xticks([0.4, 0.6, 0.8, 1.0, 1.2, 1.4])
-    ax.legend(loc="upper left", labelspacing=0.25, borderpad=0.3)
+    ax.legend(loc="upper center", labelspacing=0.25, borderpad=0.3)
     save(fig, "fig_norms_revision")
 
 

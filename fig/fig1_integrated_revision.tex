@@ -93,7 +93,7 @@
    $\mathbf{r}_{u,p}^{\top}(\mathbf{b}_i\odot\bm{\mu}_u)$};
 \node[blk,right=6mm of corr] (rec) {digit\\recombine};
 \node[blk,right=6mm of rec] (out) {$\hat{s}_u$};
-\draw[ar] (noise.east) -- node[lbl,above,pos=0.62]{$\mathbf{y}_u$} (eq.west);
+\draw[ar] (noise.east) -- node[lbl,above,pos=0.74]{$\mathbf{y}_u$} (eq.west);
 \draw[ar] (eq.east) -- (ps.west);
 \draw[ar] (ps.east) -- (corr.west);
 \node[lbl,above=0.1mm] at ($(eq.east)!0.5!(ps.west)$) {$\mathbf{r}_u$};

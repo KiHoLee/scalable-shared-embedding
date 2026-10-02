@@ -25,7 +25,7 @@ import math
 
 import torch
 
-from sse_lib import DEVICE
+from sse_lib import BITS, DEVICE
 
 
 def interleaver(d: int, P: int) -> torch.Tensor:
@@ -126,7 +126,7 @@ def full_scores(model, r, w, rule: str = "corr", chunk_v: int = 65536):
 # ----------------------------------------------------------------------
 # OMA with M-PAM per real dimension, same channel simulator
 # ----------------------------------------------------------------------
-def oma_layout(users: int, d: int, bits: int = 16):
+def oma_layout(users: int, d: int, bits: int = BITS):
     """dims per user n = d/U. Returns (n_sym, M, rep): n_sym symbols of
     M-PAM, each repeated rep times, n_sym*rep = n, n_sym*log2 M = bits."""
     n = d // users

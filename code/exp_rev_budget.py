@@ -145,7 +145,8 @@ def evaluator(scheme, model):
     return lambda s, f: eval_ser_full(model, s, frames=f)
 
 
-def train(scheme: str, iters: int, seed: int = 1, cosine: bool = True):
+def train(scheme: str, iters: int, seed: int = 1, cosine: bool = True,
+          log_frames: int = 20000):
     set_seed(seed)
     if scheme == "sse":
         model = SSE(P=P_MAX)
@@ -215,10 +216,10 @@ def train(scheme: str, iters: int, seed: int = 1, cosine: bool = True):
         macs += step_macs(scheme)
         if it in pts:
             model.calibrate_power()
-            ser = ev([10.0], 20000)[0]
+            ser = ev([10.0], log_frames)[0]
             if scheme != "sse":
                 model.md = True
-                ser_md = ev([10.0], 20000)[0]
+                ser_md = ev([10.0], log_frames)[0]
                 model.md = False
             else:
                 ser_md = ser
@@ -228,7 +229,8 @@ def train(scheme: str, iters: int, seed: int = 1, cosine: bool = True):
                   f"ser10={ser:.4f} md={ser_md:.4f}", flush=True)
     model.calibrate_power()
     if iters == 200_000:
-        torch.save(model.state_dict(), DATA / f"rev_{scheme}_long_md.pt")
+        tag = "" if seed == 1 else f"_s{seed}"
+        torch.save(model.state_dict(), DATA / f"rev_{scheme}_long_md{tag}.pt")
     return model, curve
 
 
@@ -237,10 +239,15 @@ def main():
     ap.add_argument("--schemes", default="sse,hier,sampled,full")
     ap.add_argument("--iters", type=int, default=200_000)
     ap.add_argument("--frames", type=int, default=2_000_000)
+    ap.add_argument("--seed", type=int, default=1)
+    ap.add_argument("--log-frames", type=int, default=20000,
+                    help="frames per logged SER point (seed 1 used 20000)")
     a = ap.parse_args()
+    tag = "" if a.seed == 1 else f"_s{a.seed}"
     for sch in a.schemes.split(","):
-        model, curve = train(sch, a.iters)
-        write_csv(DATA / f"rev_budget_curve_{sch}.csv",
+        model, curve = train(sch, a.iters, seed=a.seed,
+                             log_frames=a.log_frames)
+        write_csv(DATA / f"rev_budget_curve_{sch}{tag}.csv",
                   ["iter", "time_s", "macs", "ser10", "ser10_md", "scheme"],
                   curve)
         ser = evaluator(sch, model)(SNR_GRID, a.frames)
@@ -250,7 +257,7 @@ def main():
             model.md = False
         else:
             ser_md = ser
-        write_csv(DATA / f"rev_budget_final_{sch}.csv",
+        write_csv(DATA / f"rev_budget_final_{sch}{tag}.csv",
                   ["snr_db", f"ser_{sch}", f"ser_{sch}_md"],
                   list(zip(SNR_GRID, ser, ser_md)))
         print(f"[final] {sch}", ser, ser_md, flush=True)
