@@ -33,7 +33,7 @@ rp.STY.update({
     "Hier":    ("#1e8449", "h", (0, (6, 1.5, 1, 1.5, 1, 1.5)),
                 "Hierarchical softmax"),
     "OMA":     ("#7f8c8d", "^", (0, (1.5, 1, 1.5, 1, 4, 1)), "OMA"),
-    "UB":      ("#c0392b", "",  (0, (1, 1)), "Union bound (SSE)"),
+    "UB":      ("#c0392b", "",  (0, (1, 1)), "SSE union bound"),
     "Clean":   ("#000000", "",  (0, (1, 1)), "Error-free text"),
 })
 # 8:6 axes box on the shared 8:6 canvas (width 0.79, height 0.79)
@@ -237,7 +237,7 @@ def fig_scaling():
 
 
 def fig_norms():
-    """Letter Fig. R3: distribution of the masked candidate norms of the
+    """Letter Fig. R2: distribution of the masked candidate norms of the
     proposal relative to the per-user mean (rev_norms.csv, 64 values),
     with the full-codebook range (rev_norms_full.json) marked by its two
     extremes on the same axis."""
@@ -258,6 +258,12 @@ def fig_norms():
     ax.set_xlim(0.3, 1.55)
     ax.set_xticks([0.4, 0.6, 0.8, 1.0, 1.2, 1.4])
     ax.legend(loc="upper center", labelspacing=0.25, borderpad=0.3)
+    ins = ax.inset_axes([0.17, 0.14, 0.34, 0.52])
+    ins.hist(rel, bins=np.linspace(0.95, 1.03, 17), color=c, alpha=0.85,
+             edgecolor="white", linewidth=0.4)
+    ins.set_xlim(0.95, 1.035)
+    ins.set_xticks([0.96, 1.0, 1.03])
+    ins.tick_params(labelsize=6)
     save(fig, "fig_norms_revision")
 
 
