@@ -39,6 +39,7 @@ with the fixed seeds when they are missing.
 | Masked-norm histogram (response letter, Fig. R2, `replot_revision.py norms`) | `exp_rev_analysis.py`, `exp_rev_fullmd.py` | `rev_norms.csv`, `rev_norms_full.json` |
 | Seed spread | `exp_rev_seeds.py`, `exp_rev_seeds_long.py` | `rev_seeds_sse.csv`, `rev_seeds_sse_20k.csv` |
 | Fixed-load user sweep | `exp_rev_users_fixedload.py` | `rev_users_fixedload.csv` |
+| User-limit mechanism (response letter, R1.6): interference variance and per-user candidate distance vs U | `exp_rev_users_rho.py` (uses `rho_closed_form` of `exp_rev_analysis.py`) | `rev_users_rho.csv` (from `sse_P4.pt`, `rev_sse_U{2,8,16}.pt`, `rev_sse_fixedload_U*.pt`) |
 | Vocabulary sweep | `replot_revision.py scaling` | `scaling.csv`, `scaling_sse_P.csv`, `rev_scaling_fullmd.csv` |
 
 `replot_revision.py` reads only `data/` and writes `fig/`. It fails if any
