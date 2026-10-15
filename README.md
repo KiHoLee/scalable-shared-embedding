@@ -19,9 +19,11 @@ with V_u·d/P stored values and a training cost per step independent of V.
 | `data/` | Raw result of every figure and table (CSV/JSON) and the small trained models (`*.pt` below 200 kB) |
 | `fig/` | Figure PDFs regenerated from `data/` (`*_revision.pdf` belong to the current manuscript) and the TikZ source of Fig. 1 |
 
-The large full-codebook checkpoints (`full_V*.pt` for V ≥ 4,096, the
-long-budget models, about 300 MB) are not stored. The scripts retrain them
-with the fixed seeds when they are missing.
+The large full-codebook checkpoints (`full_V*.pt` for V ≥ 4,096) and the
+long-budget models of the full codebook and of sampled and hierarchical
+softmax, about 300 MB, are not stored. The scripts retrain them with the
+fixed seeds when they are missing. The long-budget models of the proposal
+(`rev_sse_long_md*.pt`, three seeds) are stored.
 
 ## Figure and table map
 
@@ -37,6 +39,7 @@ with the fixed seeds when they are missing.
 | Real AG News streams (Sec. IV, letter Fig. R1 via `replot_revision.py real`) | `exp_rev_semantic.py` | `rev_semantic.csv`, `rev_energy.json` |
 | Original-submission experiments (not in the revised manuscript) | `exp_main.py`, `exp_sota.py`, `exp_real.py`, `exp_scaling_dense.py`, `exp_sse_bestP.py`, `exp_att_seeds.py`, `exp_d128.py`, `exp_lmmse.py`, `replot.py` | `convergence.csv`, `real_ter.csv`, `real_stats.json`, `sota_real.csv`, `scaling_att_seeds.csv`, `d128_snr.json`, `curve_*.json` |
 | Masked-norm histogram (response letter, Fig. R2, `replot_revision.py norms`) | `exp_rev_analysis.py`, `exp_rev_fullmd.py` | `rev_norms.csv`, `rev_norms_full.json` |
+| Full-codebook norm spread after the long budget (response letter, R1.2/R2.4) | `exp_rev_full_long_norms.py` (needs the large `full_V65536.pt` and `rev_full_long_md.pt`, retrained by `exp_main.py` and `exp_rev_budget.py`) | `rev_norms_full_long.json` |
 | Seed spread | `exp_rev_seeds.py`, `exp_rev_seeds_long.py` | `rev_seeds_sse.csv`, `rev_seeds_sse_20k.csv` |
 | Fixed-load user sweep | `exp_rev_users_fixedload.py` | `rev_users_fixedload.csv` |
 | User-limit mechanism (response letter, R1.6): interference variance and per-user candidate distance vs U | `exp_rev_users_rho.py` (uses `rho_closed_form` of `exp_rev_analysis.py`) | `rev_users_rho.csv` (from `sse_P4.pt`, `rev_sse_U{2,8,16}.pt`, `rev_sse_fixedload_U*.pt`) |

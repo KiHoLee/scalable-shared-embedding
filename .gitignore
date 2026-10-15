@@ -2,4 +2,6 @@ __pycache__/
 *.pyc
 .DS_Store
 data/full_V4096.pt
-data/*_long*.pt
+data/rev_full_long*.pt
+data/rev_sampled_long*.pt
+data/rev_hier_long*.pt
