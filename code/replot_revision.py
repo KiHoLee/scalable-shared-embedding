@@ -205,22 +205,25 @@ def fig_snr():
 def fig_scaling():
     """Fig. 3 revised: Proposed SSE with the best structured factorization
     P in {2, 4} (scaling_sse_P.csv), full codebook decoded by minimum
-    distance (rev_scaling_fullmd.csv), ToDMA and OMA from scaling.csv."""
+    distance (rev_scaling_fullmd.csv), ToDMA from scaling.csv, OMA at unit
+    frame energy (rev_oma_sweep.csv, exp_rev_oma_sweep.py)."""
     p = rp.DATA / "scaling.csv"
     hdr = rp.cols(p)
     d = np.loadtxt(p, delimiter=",", skiprows=1)
     sp = read(rp.DATA / "scaling_sse_P.csv")
     fm = read(rp.DATA / "rev_scaling_fullmd.csv")
+    om = read(rp.DATA / "rev_oma_sweep.csv")
     V = d[:, 0]
     x = np.log2(V)
     sse = [min(float(r["ser10_P2"]), float(r["ser10_P4"])) for r in sp]
     full = [float(r["ser10_md"]) for r in fm]
     assert [int(float(r["V"])) for r in sp] == [int(v) for v in V]
     assert [int(float(r["V"])) for r in fm] == [int(v) for v in V]
+    assert [int(float(r["V"])) for r in om] == [int(v) for v in V]
     fig, ax = plt.subplots()
     series = {"SSE": sse, "Full": full,
               "ToDMA": d[:, hdr.index("ser10_ToDMA")],
-              "OMA": d[:, hdr.index("ser10_OMA")]}
+              "OMA": [float(r["ser10"]) for r in om]}
     for m in ["SSE", "Full", "ToDMA", "OMA"]:
         c, mk, ls, lb = rp.STY[m]
         ax.semilogy(x, series[m], linestyle=ls, marker=mk, color=c, label=lb)

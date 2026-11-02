@@ -1,0 +1,40 @@
+{
+ "dictionary_seed": 12345,
+ "coherence": 0.6965398192405701,
+ "pairs_above": {
+  "0.5": 47692,
+  "0.6": 266,
+  "0.7": 0
+ },
+ "total_pairs": 2147450880,
+ "noiseless_omp_wrong_picks": {
+  "frames": 200000,
+  "failed_frames": 34607,
+  "first_wrong_pass_hist": [
+   23820,
+   10262,
+   511,
+   14
+  ],
+  "maxabsrho_wrong_vs_true_q10_q50_q90": [
+   0.29695937037467957,
+   0.36387017369270325,
+   0.4477235972881317
+  ],
+  "frac_maxabsrho_above_0.5": 0.022712167352437973,
+  "frac_maxabsrho_above_0.6": 0.0005490218754857779,
+  "frac_maxabsrho_above_0.7": 0.0,
+  "abs_sumrho_wrong_vs_true_q10_q50_q90": [
+   0.7419969439506531,
+   0.9562802910804749,
+   1.1212999820709229
+  ],
+  "abs_sumrho_pass1_q10_q50_q90": [
+   0.874764084815979,
+   0.9962315559387207,
+   1.1449700593948364
+  ],
+  "maxabsrho_among_true_atoms_q50_failed": 0.18958233296871185,
+  "maxabsrho_among_true_atoms_q50_ok": 0.2030046582221985
+ }
+}

@@ -43,7 +43,20 @@ fixed seeds when they are missing. The long-budget models of the proposal
 | Seed spread | `exp_rev_seeds.py`, `exp_rev_seeds_long.py` | `rev_seeds_sse.csv`, `rev_seeds_sse_20k.csv` |
 | Fixed-load user sweep | `exp_rev_users_fixedload.py` | `rev_users_fixedload.csv` |
 | User-limit mechanism (response letter, R1.6): interference variance and per-user candidate distance vs U | `exp_rev_users_rho.py` (uses `rho_closed_form` of `exp_rev_analysis.py`) | `rev_users_rho.csv` (from `sse_P4.pt`, `rev_sse_U{2,8,16}.pt`, `rev_sse_fixedload_U*.pt`) |
-| Vocabulary sweep | `replot_revision.py scaling` | `scaling.csv`, `scaling_sse_P.csv`, `rev_scaling_fullmd.csv` |
+| Vocabulary sweep | `replot_revision.py scaling` | `scaling.csv` (ToDMA), `rev_oma_sweep.csv` (OMA at unit frame energy, `exp_rev_oma_sweep.py`), `scaling_sse_P.csv`, `rev_scaling_fullmd.csv`. The `ser*_OMA` columns of `scaling.csv` spend only b/16 of the frame energy and are kept for the record only |
+| Factorizations over ten runs (response letter, R2.2, R2.6) | `exp_rev_factor_seeds.py`, `exp_rev_factor_sweep.py`, `exp_rev_factor_bound.py`, `exp_rev_factor_mech.py` | `rev_factor_seeds.csv`, `rev_factor_sweep.csv`, `rev_factor_bound.csv`, `rev_factor_mech.csv` |
+| Masked norms over runs (response letter, R1.4) | `exp_rev_norms_runs.py` | `rev_norms_runs.csv` |
+| Scaling bound with interference, hypercube, fixed packing, full-codebook packing (response letter, R2.1, R2.3) | `exp_rev_scalingbound_rho.py`, `exp_rev_hypercube.py`, `exp_rev_fixedkappa.py`, `exp_rev_full_kappa.py` | `rev_scalingbound_rho.csv`, `rev_hypercube.csv`, `rev_fixedkappa.csv`, `rev_full_kappa.csv` |
+| User limit at other factorizations (response letter, R1.6) | `exp_rev_users_factor.py` | `rev_users_factor.csv` |
+| Role of the residual interference as users are added (response letter, R1.6) | `exp_rev_users_interf.py` | `rev_users_interf.csv` |
+| Uplink check on the trained masks (response letter, R1.6) | `exp_rev_uplink.py` | `rev_uplink.csv`, `rev_mechanism.csv` |
+| Frequency selectivity: floors, rotated OMA (response letter, R1.6) | `exp_rev_fs_floor.py`, `exp_rev_rot_oma.py` | `rev_fs_floor.csv`, `rev_fs_floor_crossover.csv`, `rev_rot_oma.csv` |
+| Estimation-error floors (response letter, R1.6) | `exp_rev_csifloor.py` | `rev_csifloor.csv` |
+| SNR gap to the full codebook (response letter, R1.2, R1.6) | `exp_rev_gap_curves.py`, `exp_rev_gap_vs_V.py` | `rev_gap_curves.csv`, `rev_gap_db.csv`, `rev_gap_vs_V.csv` |
+| Per-step accounting and timing (response letter, R1.2) | `exp_rev_c_closedform.py`, `exp_rev_timing.py` | `rev_c_closedform.csv`, `rev_c_closedform_ops.csv`, `rev_c_closedform_train.csv`, `rev_timing.csv` |
+| ToDMA detectors (Sec. IV, response letter, R1.2) | `exp_rev_todma_detect.py` | `rev_todma_detect.csv`, `rev_todma_detect.json` |
+| Topic accuracy over runs and under block fading (Sec. IV, response letter, R1.1, R2.5) | `exp_rev_sem_runs.py`, `exp_rev_sem_block.py` | `rev_sem_runs.csv`, `rev_sem_runs_pairs.csv`, `rev_sem_block.csv` |
+| Energy decomposition on real streams (response letter, R1.3) | `exp_rev_energy_decomp.py` | `rev_energy_decomp.json` |
 
 `replot_revision.py` reads only `data/` and writes `fig/`. It fails if any
 axis label is clipped or any legend covers a curve.
