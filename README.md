@@ -82,6 +82,15 @@ axis label is clipped or any legend covers a curve.
   seed 1 gives an SER near 0.30 at 10 dB rather than the 0.257 of the
   released `sse_P4.pt`. The released checkpoints are the reported models;
   expect the stated seed spread when retraining.
+- Timing hardware: the 13.5 s and 108.4 s of `complexity.json` and the
+  `time_s` of `convergence.csv` come from the CUDA GPU of the workstation
+  used for the original submission (WSL, GPU model not logged) and include
+  the evaluation logged every 100 iterations. The `time_s` columns of
+  `rev_budget_curve_*.csv` count training steps only and come from an
+  NVIDIA RTX A4500. Seed 1 shared that GPU with other runs, while seeds 2
+  and 3 ran one at a time, so the `time_s` of the `_mean` files mixes two
+  loads. `rev_timing.csv` comes from an NVIDIA RTX PRO 5000 Blackwell
+  (logged as `cuda:0`) and one CPU thread of the same server.
 
 ## Requirements
 

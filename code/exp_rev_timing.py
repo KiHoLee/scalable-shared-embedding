@@ -1,5 +1,6 @@
-"""Revision: where the eight-times wall-clock ratio comes from, and decoding time
-on one CPU thread. Medians per step or token, one job at a time.
+"""Revision: time per training step of the proposal and the full codebook on a
+GPU and on one CPU thread, and decoding time per token on one CPU thread.
+Medians per part of a step or per token, one job on the GPU.
 Output: data/rev_timing.csv (device, scheme, part, seconds)."""
 import time
 
