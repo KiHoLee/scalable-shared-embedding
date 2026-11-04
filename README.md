@@ -51,6 +51,8 @@ fixed seeds when they are missing. The long-budget models of the proposal
 | Role of the residual interference as users are added (response letter, R1.6) | `exp_rev_users_interf.py` | `rev_users_interf.csv` |
 | Uplink check on the trained masks (response letter, R1.6) | `exp_rev_uplink.py` | `rev_uplink.csv`, `rev_mechanism.csv` |
 | Frequency selectivity: floors, rotated OMA (response letter, R1.6) | `exp_rev_fs_floor.py`, `exp_rev_rot_oma.py` | `rev_fs_floor.csv`, `rev_fs_floor_crossover.csv`, `rev_rot_oma.csv` |
+| Reported model on fresh seeds and best-of-six statistics, selection and reporting on separate seeds (response letter, Editor, R1.2) | `exp_rev_selection.py` | `rev_selection.csv`, `rev_selection_summary.csv` |
+| Source of the lead over binary OMA: energy, distance spectrum and near neighbours of each user's digit code (response letter, R1.2) | `exp_rev_spectrum.py` | `rev_spectrum.csv`, `rev_spectrum_pairs.csv`, `rev_spectrum_awgn.csv` |
 | Estimation-error floors (response letter, R1.6) | `exp_rev_csifloor.py` | `rev_csifloor.csv` |
 | SNR gap to the full codebook (response letter, R1.2, R1.6) | `exp_rev_gap_curves.py`, `exp_rev_gap_vs_V.py` | `rev_gap_curves.csv`, `rev_gap_db.csv`, `rev_gap_vs_V.csv` |
 | Per-step accounting and timing (response letter, R1.2) | `exp_rev_c_closedform.py`, `exp_rev_timing.py` | `rev_c_closedform.csv`, `rev_c_closedform_ops.csv`, `rev_c_closedform_train.csv`, `rev_timing.csv` |
