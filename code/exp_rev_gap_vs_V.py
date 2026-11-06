@@ -158,7 +158,7 @@ def stage_gap():
     for snr in SNRS:
         r = dict(ss)[snr]
         mean, lo, hi = float(r["ser_mean"]), float(r["ser_min"]), float(r["ser_max"])
-        rows.append(("B", 65536, int(snr), 200000, 3, 200000, 3, mean, lo, hi,
+        rows.append(("B", 65536, int(snr), 200000, 10, 200000, 10, mean, lo, hi,
                      ser[grid.index(snr)], gap(mean, snr, grid, ser),
                      gap(lo, snr, grid, ser), gap(hi, snr, grid, ser)))
     for r in rows:

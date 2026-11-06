@@ -1,19 +1,27 @@
 """Final evaluation of the long-budget (2e5-iteration) models of
-exp_rev_budget.py for training seeds 1, 2 and 3, and their mean.
+exp_rev_budget.py for training seeds 1 to 10, and their mean.
 
-Loads data/rev_{scheme}_long_md{tag}.pt (tag "" for seed 1, "_s2",
-"_s3"), evaluates the SER over SNR_GRID with 2e6 frames per point (the
+Loads data/rev_{scheme}_long_md{tag}.pt (tag "" for seed 1, "_s2", ...,
+"_s10"), evaluates the SER over SNR_GRID with 2e6 frames per point (the
 full-codebook variants by minimum distance, SSE by correlation), and
 writes
 
   data/rev_budget_final_{scheme}{tag}.csv   per seed (snr, ser, ser_md)
-  data/rev_budget_final_mean.csv            3-seed mean per scheme
-  data/rev_budget_curve_{scheme}_mean.csv   3-seed mean of the logged
+  data/rev_budget_final_mean.csv            10-seed mean per scheme
+  data/rev_budget_curve_{scheme}_mean.csv   10-seed mean of the logged
                                             training curves (same
                                             iteration grid in all seeds)
 
 Table I long-budget rows and Fig. 3 use the *_mean files.
+
+Seeds 1-3 were trained first; seeds 4-10 were added on 2026-11-05/06 by
+exp_rev_budget.py --seed {4..10} --log-frames 200000 (code/fig3_seed_queue.sh),
+four runs at a time on one GPU, so their time_s columns reflect a shared GPU.
+exp_rev_budget.py already writes rev_budget_final_{scheme}{tag}.csv with the
+same evaluator, 2e6 frames per point, and evaluation seeds as below, so
+--aggregate-only rebuilds the means from those files without re-evaluating.
 """
+import argparse
 import csv
 
 import torch
@@ -21,7 +29,7 @@ import torch
 from exp_rev_budget import (SNR_GRID, V, HierCodebook, evaluator)
 from sse_lib import DATA, DEVICE, P_MAX, SSE, FullCodebook, write_csv
 
-SEEDS = [1, 2, 3]
+SEEDS = list(range(1, 11))
 SCHEMES = ["sse", "full", "sampled", "hier"]
 FRAMES = 2_000_000
 
@@ -50,10 +58,18 @@ def read_rows(path):
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--aggregate-only", action="store_true",
+                    help="read the per-seed final CSVs instead of re-evaluating")
+    a = ap.parse_args()
     mean_rows = []
     for sch in SCHEMES:
         per_seed = []
         for seed in SEEDS:
+            if a.aggregate_only:
+                rows = read_rows(DATA / f"rev_budget_final_{sch}{tag(seed)}.csv")
+                per_seed.append([float(r[f"ser_{sch}_md"]) for r in rows])
+                continue
             m = load(sch, seed)
             ev = evaluator(sch, m)
             ser = ev(SNR_GRID, FRAMES)

@@ -19,11 +19,12 @@ with V_u·d/P stored values and a training cost per step independent of V.
 | `data/` | Raw result of every figure and table (CSV/JSON) and the small trained models (`*.pt` below 200 kB) |
 | `fig/` | Figure PDFs regenerated from `data/` (`*_revision.pdf` belong to the current manuscript) and the TikZ source of Fig. 1 |
 
-The large full-codebook checkpoints (`full_V*.pt` for V ≥ 4,096) and the
-long-budget models of the full codebook and of sampled and hierarchical
-softmax, about 300 MB, are not stored. The scripts retrain them with the
+The larger models of the full codebook and of the other conventional
+schemes, among them `full_V*.pt` for V ≥ 4,096 and the long-budget models
+of the full codebook and of sampled and hierarchical softmax for all ten
+seeds, about 0.8 GB in all, are not stored. The scripts retrain them with the
 fixed seeds when they are missing. The long-budget models of the proposal
-(`rev_sse_long_md*.pt`, three seeds) are stored.
+(`rev_sse_long_md*.pt`, ten seeds) are stored.
 
 ## Figure and table map
 
@@ -31,8 +32,8 @@ fixed seeds when they are missing. The long-budget models of the proposal
 |---|---|---|
 | Fig. 1 (system) | `fig/fig1_integrated_revision.tex` (standalone TikZ) | none |
 | Fig. 2 (SER vs SNR) | `replot_revision.py snr` | `snr_sweep.csv` (`exp_main.py`), `sota_snr.csv` (`exp_sota.py`), `rev_snr_fullmd.csv` (`exp_rev_fullmd.py`) |
-| Fig. 3 (SER vs training MACs) | `replot_revision.py conv` | `rev_budget_curve_{sse,full,sampled,hier}_mean.csv` (3-seed means by `exp_rev_budget_eval.py` of `rev_budget_curve_{scheme}[_s2|_s3].csv` from `exp_rev_budget.py --seed {1,2,3} --log-frames 200000`) |
-| Table I | none | `snr_sweep.csv`, `sota_snr.csv`, `rev_snr_fullmd.csv`, `rev_budget_final_mean.csv` (3-seed means; per seed `rev_budget_final_{scheme}[_s2|_s3].csv`), `complexity.json` |
+| Fig. 3 (SER vs training MACs) | `replot_revision.py conv` | `rev_budget_curve_{sse,full,sampled,hier}_mean.csv` (10-seed means by `exp_rev_budget_eval.py --aggregate-only` of `rev_budget_curve_{scheme}[_s2|...|_s10].csv`. Seed 1 comes from `exp_rev_budget.py --seed 1`, which logs 2e4 frames per point, and seeds 2-10 from `exp_rev_budget.py --seed {2,...,10} --log-frames 200000`, seeds 4-10 through `fig3_seed_queue.sh`) |
+| Table I | none | `snr_sweep.csv`, `sota_snr.csv`, `rev_snr_fullmd.csv`, `rev_budget_final_mean.csv` (10-seed means; per seed `rev_budget_final_{scheme}[_s2|...|_s10].csv`), `complexity.json` |
 | Table II | none | `rev_robust.csv` and `rev_robust_fullmd.csv` (`exp_rev_robust.py`, `rev_channel.py`), `rev_users.csv`, `rev_users_fixedload.csv` (`exp_rev_users_fixedload.py`) |
 | Analysis checks (Sec. III-B) | `exp_rev_analysis.py`, `exp_rev_scalingbound.py`, `exp_rev_fullmd.py` | `rev_norms.csv`, `rev_norms_full.json`, `rev_decoders.csv`, `rev_rho.json`, `rev_indep.csv`, `rev_isotropy.json`, `rev_scaleP.csv`, `rev_factor.csv`, `rev_scalingbound.csv` |
 | CSI-aware retraining (response letter, R1.6) | `exp_rev_csitrain.py` | `rev_csitrain.csv` |
@@ -52,7 +53,7 @@ fixed seeds when they are missing. The long-budget models of the proposal
 | Uplink check on the trained masks (response letter, R1.6) | `exp_rev_uplink.py` | `rev_uplink.csv`, `rev_mechanism.csv` |
 | Frequency selectivity: floors, rotated OMA (response letter, R1.6) | `exp_rev_fs_floor.py`, `exp_rev_rot_oma.py` | `rev_fs_floor.csv`, `rev_fs_floor_crossover.csv`, `rev_rot_oma.csv` |
 | Reported model on fresh seeds and best-of-six statistics, selection and reporting on separate seeds (response letter, Editor, R1.2) | `exp_rev_selection.py` | `rev_selection.csv`, `rev_selection_summary.csv` |
-| Source of the lead over binary OMA: energy, distance spectrum and near neighbours of each user's digit code (response letter, R1.2) | `exp_rev_spectrum.py` | `rev_spectrum.csv`, `rev_spectrum_pairs.csv`, `rev_spectrum_awgn.csv` |
+| Source of the lead over OMA: energy, distance spectrum and near neighbours of each user's digit code (response letter, R1.2) | `exp_rev_spectrum.py` | `rev_spectrum.csv`, `rev_spectrum_pairs.csv`, `rev_spectrum_awgn.csv` |
 | Estimation-error floors (response letter, R1.6) | `exp_rev_csifloor.py` | `rev_csifloor.csv` |
 | SNR gap to the full codebook (response letter, R1.2, R1.6) | `exp_rev_gap_curves.py`, `exp_rev_gap_vs_V.py` | `rev_gap_curves.csv`, `rev_gap_db.csv`, `rev_gap_vs_V.csv` |
 | Per-step accounting and timing (response letter, R1.2) | `exp_rev_c_closedform.py`, `exp_rev_timing.py` | `rev_c_closedform.csv`, `rev_c_closedform_ops.csv`, `rev_c_closedform_train.csv`, `rev_timing.csv` |
@@ -78,7 +79,7 @@ axis label is clipped or any legend covers a curve.
 - Seeds: training seed 1 and evaluation seed 777. The reported SSE main
   model (`sse_P4.pt`) is the best of six training runs; the other five
   seeds are in `rev_seeds_sse.csv` (`exp_rev_seeds.py`). Long-budget
-  (2e5-iteration) results are means of training seeds 1, 2, 3
+  (2e5-iteration) results are means of training seeds 1 to 10
   (`exp_rev_budget_eval.py`).
 - GPU training is not bit-reproducible: re-running `exp_main.py` with
   seed 1 gives an SER near 0.30 at 10 dB rather than the 0.257 of the
@@ -89,10 +90,13 @@ axis label is clipped or any legend covers a curve.
   used for the original submission (WSL, GPU model not logged) and include
   the evaluation logged every 100 iterations. The `time_s` columns of
   `rev_budget_curve_*.csv` count training steps only and come from an
-  NVIDIA RTX A4500. Seed 1 shared that GPU with other runs, while seeds 2
-  and 3 ran one at a time, so the `time_s` of the `_mean` files mixes two
-  loads. `rev_timing.csv` comes from an NVIDIA RTX PRO 5000 Blackwell
-  (logged as `cuda:0`) and one CPU thread of the same server.
+  NVIDIA RTX A4500 for seeds 1-3. Seed 1 shared that GPU with other runs,
+  while seeds 2 and 3 ran one at a time. Seeds 4-10 ran on an NVIDIA RTX
+  PRO 5000 Blackwell, four runs sharing one GPU. The `time_s` of the
+  `_mean` files therefore mixes several loads and is not used for any
+  wall-clock statement. `rev_timing.csv` comes from an NVIDIA RTX PRO
+  5000 Blackwell (logged as `cuda:0`) and one CPU thread of the same
+  server.
 
 ## Requirements
 

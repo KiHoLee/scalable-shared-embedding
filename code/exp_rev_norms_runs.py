@@ -10,7 +10,7 @@ the SER only through that gap. Groups:
   reported      sse_P4.pt (reference)
   other_4k_16_4 the 15 other 4,000-iteration runs of (16,4): rev_sse_seed1..5 and
                 rev_factor_16_4_s1..10
-  long_16_4     the three long-budget runs rev_sse_long_md{,_s2,_s3}.pt
+  long_16_4     the ten long-budget runs rev_sse_long_md{,_s2,...,_s10}.pt
   runs_256_2    the ten runs rev_factor_256_2_s1..10
 The rows with model ALL_min and ALL_max hold the minimum and maximum of each
 column over the group.
@@ -26,8 +26,8 @@ from sse_lib import DATA, write_csv
 GROUPS = {"reported": [(16, 4, "sse_P4.pt")],
           "other_4k_16_4": [(16, 4, f"rev_sse_seed{s}.pt") for s in range(1, 6)]
           + [(16, 4, f"rev_factor_16_4_s{s}.pt") for s in range(1, 11)],
-          "long_16_4": [(16, 4, n) for n in ("rev_sse_long_md.pt", "rev_sse_long_md_s2.pt",
-                                             "rev_sse_long_md_s3.pt")],
+          "long_16_4": [(16, 4, "rev_sse_long_md.pt")]
+          + [(16, 4, f"rev_sse_long_md_s{s}.pt") for s in range(2, 11)],
           "runs_256_2": [(256, 2, f"rev_factor_256_2_s{s}.pt") for s in range(1, 11)]}
 COLS = ["rel_min", "rel_max", "max_dev", "cv_pop_min", "cv_pop_max", "cv_sample_max",
         "ser_corr10", "ser_md10", "gap10_pct", "ser_corr20", "ser_md20", "gap20_pct"]
