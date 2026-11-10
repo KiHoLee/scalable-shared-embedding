@@ -1,0 +1,7 @@
+source,users,M,rep,frame_energy,energy_top_symbol,frac_top_bit_zero
+bert,2,2,2,1,1,1
+bert,4,2,1,1,1,1
+bert,8,4,1,1.222714424,1.696252942,1
+gtr,2,2,2,1,1,1
+gtr,4,2,1,1,1,1
+gtr,8,4,1,1.292423725,1.702094913,1

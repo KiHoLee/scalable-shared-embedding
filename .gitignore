@@ -5,3 +5,9 @@ data/full_V4096.pt
 data/rev_full_long*.pt
 data/rev_sampled_long*.pt
 data/rev_hier_long*.pt
+# trained masks (directory or symlink) and smoke-test outputs
+data/pm/pm_models
+data/pm/pm_models_smoke
+data/pm/*_smoke*
+# earlier-design file that no script writes (removed in e67e4f3)
+data/rev_full_long_md_eval.csv
