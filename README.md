@@ -6,6 +6,8 @@ Code and raw results for
 > Access to Large Vocabularies via Periodic Codebook Reuse,"
 > submitted to *IEEE Wireless Communications Letters*.
 
+Corresponding authors: Hyun-Ho Choi and Jung-Ryun Lee.
+
 The construction divides a d-dimensional embedding frame into P periods,
 reuses one unit codebook of V_u codewords in every period, and carries the
 vocabulary index in its base-V_u digits, so V = V_u^P indices are served
