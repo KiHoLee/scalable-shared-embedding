@@ -34,7 +34,7 @@ def oma_dmin2(users: int, d: int, bits: int = 16) -> float:
     that differ in one bit, at unit frame energy. Each user owns d/U real
     dimensions with energy 1/U, so each dimension carries energy 1/d."""
     n = d // users
-    if n >= bits:                       # binary, repeated n/bits times
+    if n >= bits:                       # one sign per bit, repeated n/bits times
         rep = n // bits
         return 4.0 * rep / d
     bps = bits // n                     # M-PAM with M = 2^bps, unit power

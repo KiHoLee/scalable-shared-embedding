@@ -1,7 +1,7 @@
 """Revision (reported model below OMA under flat fading): mechanism.
 
 Question. The reported model sse_P4.pt has kappa_u = 0.252 on average, almost
-the value 0.25 of binary OMA, yet its SER is below OMA at every SNR of Fig. 2.
+the value 0.25 of OMA, yet its SER is below OMA at every SNR of Fig. 2.
 Why? No training here.
 
 Codes compared, both at frame energy 1 (Sec. II, gamma = 1/(d sigma^2)):
@@ -9,7 +9,7 @@ Codes compared, both at frame energy 1 (Sec. II, gamma = 1/(d sigma^2)):
        scale actually used, x_i = b_i . mu_u / (c sqrt(P)) in R^L, L = 16.
        A frame carries P = 4 such digits, all with the same gain h.
   OMA  the user owns d/U = 16 dimensions, 4 per period, and sends one bit per
-       dimension with amplitude 1/sqrt(d). Per period that is the binary 4-cube
+       dimension with amplitude 1/sqrt(d). Per period that is the 4-cube
        (16 points, energy 4/d = 1/16 per digit, d_OMA^2 = 4/d). Its 16 bits with
        one gain are exactly 4 cube digits with one gain.
 Instantaneous SNR s = h^2 gamma; OMA's bit error is then Q(sqrt(s)) and a pair
@@ -258,7 +258,7 @@ def main():
     torch.backends.cudnn.allow_tf32 = False
     rows, pairs, awgn = [], [], []
 
-    # ---------------- OMA reference: the binary 4-cube --------------------
+    # ---------------- OMA reference: the 4-cube ---------------------------
     C = cube()
     g_oma, d2c, rel_c = geometry(C)
     pd_cube_cf = [1 - (1 - 0.5 * math.erfc(math.sqrt(10 ** (sd / 10)) / math.sqrt(2))) ** 4
@@ -274,15 +274,15 @@ def main():
                   "area_iso": A_cube_iso, "area_ub": A_cube_ub,
                   "area_ratio_iso": 1.0, "area_ratio_ub": 1.0})
     for k, g in enumerate(SNRS):
-        rows.append(["OMA", "binary 4-cube", "cube", g] + [g_oma[c] for c in GEO] +
+        rows.append(["OMA", "4-cube", "cube", g] + [g_oma[c] for c in GEO] +
                     [ser_oma[k], ser_cube[k], dig_cube[k], ub_oma[k], ser_oma[k],
                      ser_cube[k], dig_cube[k], ub_oma[k], 1.0, ser_cube[k] / ser_oma[k]])
     for i in range(VU):
         for j in range(i + 1, VU):
-            pairs.append(["OMA", "binary 4-cube", "cube", i, j, float(d2c[i, j]),
+            pairs.append(["OMA", "4-cube", "cube", i, j, float(d2c[i, j]),
                           float(d2c[i, j]) / D2_OMA])
     for sd, a, b in zip(S_DB, pd_cube_cf, pd_cube_mc):
-        awgn.append(["OMA", "binary 4-cube", "cube", float(sd), b, a])
+        awgn.append(["OMA", "4-cube", "cube", float(sd), b, a])
     print("[OMA] A_iso", A_cube_iso, "A_ub", A_cube_ub, "ser", ser_oma[5], ser_oma[10],
           "cube MC", ser_cube[5], ser_cube[10], "ub", ub_oma[5], ub_oma[10],
           "cross", cross_c, flush=True)

@@ -3,7 +3,7 @@ of the sweep, against the proposal.
 
 Convention. Section II fixes unit frame energy and gamma = 1/(d sigma^2) for all
 schemes. OMA gives each of the U users d/U = 16 real dimensions, so a user holds
-frame energy 1/U. A token of b = log2 V bits at binary signaling spends energy
+frame energy 1/U. A token of b = log2 V bits, each bit sent as one sign on 16/b of these dimensions, spends energy
 1/(U b) per bit, and matched filtering over the dimensions of the bit gives the
 per-bit SNR h^2 gamma 16/b. Hence
 
@@ -59,7 +59,7 @@ RUNS = DATA / "rev_oma_sweep_runs.csv"
 
 
 def oma_unit_energy(bits: float, snrs=SNRS):
-    """SER of binary OMA at unit frame energy with `bits` bits per token."""
+    """SER of OMA at unit frame energy with `bits` bits per token."""
     g = 10.0 * math.log10(DIMS / bits)
     return oma_ser([s + g for s in snrs], bits=bits)
 

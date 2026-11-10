@@ -13,7 +13,7 @@ Layouts of the proposal:
 
 Also, on the downlink simulator rev_channel.py:
   runs      : flat, offsets, NMSE, T=4 and T=8 over the six 4,000-iteration runs
-  sign      : binary sign patterns on the same masks (tests the codeword shape)
+  sign      : sign patterns on the same masks (tests the codeword shape)
   oma_inter : OMA with the same interleaver as the proposal
   floor     : NMSE 0.01, 0.05 at 30 and 40 dB
   combo     : T=4 with NMSE 0.01, 0.05
@@ -85,7 +85,7 @@ def aligned(m):
 
 
 def sign_patterns(m):
-    """Binary sign patterns on the four strongest dimensions of each user."""
+    """Sign patterns on the four strongest dimensions of each user."""
     M = m.masks().detach() ** 2
     act = [M[u].topk(4).indices.sort().values for u in range(U)]
     B, W = torch.zeros_like(m.B.data), torch.zeros_like(m.W.data)

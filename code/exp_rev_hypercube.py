@@ -1,7 +1,7 @@
 """Revision R2.1/R2.2/R2.6: a fixed packing kappa_u under rho_u = 0.
 
-Builds, inside the SSE class, the binary hypercube with disjoint masks: each
-user owns b = log2 Vu of the L = d/P coordinates of a period, the shared unit
+Builds, inside the SSE class, the hypercube of OMA: the mask of each user
+weights its own b = log2 Vu of the L = d/P coordinates of a period, the shared unit
 codeword b_i repeats the b-bit pattern of index i on all U blocks, and the
 L - U b remaining coordinates stay unused. This fits whenever U log2 Vu <= L,
 that is U log2 V <= d, and needs no divisibility of L/U by b.
@@ -11,7 +11,7 @@ users, rho_u by the closed form (8) of exp_rev_analysis.rho_closed_form, and
 kappa_u against the design value 4/(U log2 Vu). Monte Carlo SER at 10 and 20 dB
 through the letter's real model (eval_ser_sse), against the closed form
 E_h[1 - (1 - Q(h sqrt(gamma d/(U b P))))^(b P)]. At (Vu,P) = (16,4) this design
-is the binary OMA reference, so it bounds a scheme that needs no training and
+is the OMA reference, so it bounds a scheme that needs no training and
 says nothing about what training reaches.
 
 (16,1), (16,2), (16,4), (4,8), (256,2) are the requested points, (2,16) and the

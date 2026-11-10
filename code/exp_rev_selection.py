@@ -1,13 +1,14 @@
 """Revision: the reported model on fresh evaluation seeds, and the best-of-six
 procedure with selection and reporting kept apart.
 
-Question. The reported model (sse_P4.pt) is the best of six 4,000-iteration
-runs (with rev_sse_seed1..5.pt). Its Fig. 2 and Table I SERs and the ranking
-that made it the best come from one evaluation protocol, eval_ser_sse of
-sse_lib.py: digits from a CPU generator seeded 777 + int(10*snr), gains and
-noise from the global CUDA generator (exp_main.py after set_seed(1), 2e6
-frames; exp_rev_seeds.py after training, 5e5 frames). The objection is that
-the model was selected on the test evaluation. This script re-evaluates all
+Question. The reported model (sse_P4.pt) is the training-seed-1 run of the
+original submission. During the revision it ranked first of six 4,000-iteration
+runs (with rev_sse_seed1..5.pt, trained afterwards on a CPU by exp_rev_seeds.py).
+Its Fig. 2 and Table I SERs and that ranking come from one evaluation protocol,
+eval_ser_sse of sse_lib.py: digits from a CPU generator seeded 777 + int(10*snr),
+gains and noise from the global generator of the device (CUDA for exp_main.py
+after set_seed(1), 2e6 frames; CPU for exp_rev_seeds.py after training, 5e5
+frames). The objection is that the ranking shares the test evaluation. This script re-evaluates all
 runs on seeds that no script of the project has used.
 
 Setup. U = 4, d = 64, Vu = 16, P = 4, V = 65,536, flat Rayleigh fading with
@@ -18,7 +19,7 @@ runs of (Vu,P) = (16,4):
   ten_further  rev_factor_16_4_s1..s10.pt   (exp_rev_factor_seeds.py)
 Decoder. The correlation rule of SSE.forward (Fig. 2), reproduced here with
 the gains and noise passed in. A check against SSE.forward runs first.
-OMA. Binary signaling of the 16 index bits on d/U = 16 real dimensions per
+OMA. One bit per real dimension for the 16 index bits on d/U = 16 real dimensions per
 user at unit frame energy (amplitude 1/sqrt(d) per dimension), the scheme of
 oma_ser() behind Table I and Fig. 2, simulated at the dimension level. The
 closed form oma_ser() is reported next to it.
@@ -29,7 +30,7 @@ vector of each user's receiver.
   OMA_contig   user u on the 16 dimensions of period u.
   OMA_aligned  the four bits of digit p of user u on the four positions of
                period p where the reported model's mask of user u is largest.
-               These sets partition the period for sse_P4.pt (checked). Same
+               For sse_P4.pt these sets cover each position of the period once (checked). Same
                SER law, tighter coupling with the reported model only.
 
 Seed sets. Two fresh sets, A and B, each with --frames frames per SNR in chunks
@@ -123,7 +124,7 @@ def antipodal_bits(digits):
 
 @torch.no_grad()
 def oma_wrong(b, h, noise_sel, sigma):
-    """Binary OMA at unit frame energy. b, noise_sel (n,U,16) -> (n,U) bool."""
+    """OMA at unit frame energy. b, noise_sel (n,U,16) -> (n,U) bool."""
     y = h[:, :, None] * b / math.sqrt(D) + sigma * noise_sel
     return ((y * b) < 0).any(dim=2)
 
@@ -282,8 +283,8 @@ def main():
         print(f"[check] {name}: decisions differing from SSE.forward = {bad}", flush=True)
         assert bad == 0
     supp, part, frac = aligned_support(models[0])
-    print(f"[aligned] support {supp.tolist()} partition={part} min energy frac={frac:.4f}")
-    assert part, "aligned OMA needs a partition of the period"
+    print(f"[aligned] support {supp.tolist()} covers_period={part} min energy frac={frac:.4f}")
+    assert part, "aligned OMA needs supports that cover the period"
 
     pts = {}
     for S in ("A", "B"):

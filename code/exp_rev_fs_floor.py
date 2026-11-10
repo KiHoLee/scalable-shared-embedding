@@ -9,8 +9,8 @@ interleaver, under weighted minimum distance (wmd, weights |g_k|^2) and
 unweighted minimum distance (md).
 Variant `zeroed` applies to sse_P4.pt only: the mask entries off each user's
 four largest dimensions are set to zero, without retraining, and c is
-recalibrated. These supports are disjoint for sse_P4.pt but not for the other
-five runs. OMA is plain BPSK per real dimension on contiguous blocks, as in
+recalibrated. For sse_P4.pt these supports cover all 16 dimensions of a
+period, which does not hold for the other five runs. OMA is plain BPSK per real dimension on contiguous blocks, as in
 Table II. Reference rows at T = 1 (flat, no interleaver, correlation and md)
 compare the reported model with its zeroed variant.
 
@@ -53,7 +53,7 @@ def zero_off_support(m):
     n = copy.deepcopy(m)
     M = m.masks().detach()
     top = (M ** 2).topk(4, dim=1).indices
-    assert len(set(top.reshape(-1).tolist())) == 16, "supports must be disjoint"
+    assert len(set(top.reshape(-1).tolist())) == 16, "supports must cover all 16 dimensions"
     W = torch.zeros_like(n.W.data)
     for u in range(U):
         W[u, top[u]] = M[u, top[u]]

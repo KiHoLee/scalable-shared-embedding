@@ -19,7 +19,7 @@ Matrices (column `matrix`):
   K4  a second orthogonal matrix, a = 0.37174803,
       b = 0.60150095. Kept only to identify its values. The difference
       (2,2,2,2) falls on 2 coordinates, so its minimum product distance is 0.
-  I   no rotation (binary signs), control.
+  I   no rotation (one sign per dimension), control.
 
 Layouts (column `layout`), physical real dimensions of digit p of user u,
 j = 0..3, and subcarrier = dimension // 2:

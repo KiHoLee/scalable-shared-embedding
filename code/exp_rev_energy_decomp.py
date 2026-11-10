@@ -1,5 +1,5 @@
 """Revision R1.3/R1.6: decomposition of the frame energy on the real streams and
-mask orthogonality. No training.
+the largest cosine between masks. No training.
 
 Output: data/rev_energy_decomp.json
   sse/full/todma: mean, min, max, std of the frame energy on the AG News streams

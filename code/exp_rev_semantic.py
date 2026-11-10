@@ -2,7 +2,7 @@
 on the real AG News token streams, and the measured transmit energy.
 
 Stream construction is identical to exp_real.py (2,000 AG News test
-items, bert-base-uncased WordPiece ids, four disjoint user streams,
+items, bert-base-uncased WordPiece ids, four separate user streams,
 one token per user per frame, base-16 digits of the raw id). Each
 scheme decodes the streams; the decoded ids are reassembled into the
 news items, detokenized, and scored by two frozen public models that

@@ -77,14 +77,25 @@ axis label is clipped or any legend covers a curve.
   decoded by exact minimum distance (`model.md = True`). SSE uses the
   correlation rule.
 - Seeds: training seed 1 and evaluation seed 777. The reported SSE main
-  model (`sse_P4.pt`) is the best of six training runs; the other five
-  seeds are in `rev_seeds_sse.csv` (`exp_rev_seeds.py`). Long-budget
-  (2e5-iteration) results are means of training seeds 1 to 10
-  (`exp_rev_budget_eval.py`).
-- GPU training is not bit-reproducible: re-running `exp_main.py` with
-  seed 1 gives an SER near 0.30 at 10 dB rather than the 0.257 of the
-  released `sse_P4.pt`. The released checkpoints are the reported models;
-  expect the stated seed spread when retraining.
+  model (`sse_P4.pt`) is the training-seed-1 run of the original
+  submission (`exp_main.py`) and has the lowest SER of six 4,000-iteration
+  runs. The other five, trained during the revision, are in
+  `rev_seeds_sse.csv` (`exp_rev_seeds.py`, labels 1-5). That script builds
+  each model before it sets the seed, so its labels set the training
+  samples but not the starting weights, and its run labeled 1 is not a
+  re-run of `sse_P4.pt`. The two-user models of `exp_rev_robust.py` (run
+  with `--part users`) and `exp_rev_users_fixedload.py` and the NMSE 0.05
+  model of `exp_rev_csitrain.py` were likewise built before any seed was
+  set, so their starting weights were not recorded. Long-budget
+  (2e5-iteration) results are means of
+  training seeds 1 to 10 (`exp_rev_budget_eval.py`).
+- Training results depend on the GPU, the software version, and the
+  evaluations logged during training, which draw on the generator of the
+  training samples. The run `rev_factor_16_4_s1.pt` of
+  `exp_rev_factor_seeds.py`, seeded like `exp_main.py` (`set_seed(1)`
+  before `SSE(P=4)`) but trained without the logged evaluations, gives
+  0.276 at 10 dB rather than the 0.257 of the released `sse_P4.pt`. The released checkpoints are the reported models,
+  and a retrained model is expected to lie within the stated seed spread.
 - Timing hardware: the 13.5 s and 108.4 s of `complexity.json` and the
   `time_s` of `convergence.csv` come from the CUDA GPU of the workstation
   used for the original submission (WSL, GPU model not logged) and include

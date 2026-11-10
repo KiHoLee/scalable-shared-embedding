@@ -12,11 +12,11 @@ rev_sse_U8_P4.pt and rev_sse_U8_P2.pt (no generating script of their own).
 
 The ideal packing: PACK_RESTARTS restarts of an annealed soft-min repulsion of N
 unit points in L/U dimensions, N = 256 in 4 (P = 2) and N = 16 in 2 (P = 4). Since the masks
-are disjoint and the codewords have equal norm, delta^2 = chord^2/(U P), which is
+of this design weight separate blocks and the codewords have equal norm, delta^2 = chord^2/(U P), which is
 compared with 4 a^2/d of four-level OMA. The value is a numerical lower bound on
 the best packing. The best (256,4) configuration is stored in
 data/rev_users_factor_pack256_4.pt. Each packing is also evaluated as a design
-inside the SSE class (same points in each user's block, disjoint masks), through
+inside the SSE class (same points in each user's block, each mask on its own block), through
 the same channel and decoder, to test that the limit belongs to training and not
 to the frame.
 
@@ -120,7 +120,7 @@ def pack(N, n):
 
 
 def design(points, P):
-    """SSE with the same points in each user's block and disjoint masks."""
+    """SSE with the same points in each user's block, each mask on its own block."""
     N, n = points.shape
     L = D // P
     assert n * USERS == L

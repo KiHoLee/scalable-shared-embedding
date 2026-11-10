@@ -1,125 +1,125 @@
 run,model,user,s_db,pd_mc,pd_cube_closed
-OMA,binary 4-cube,cube,-10,0.848461,0.8483035258
-OMA,binary 4-cube,cube,-9.75,0.84536,0.8448727825
-OMA,binary 4-cube,cube,-9.5,0.84126,0.8412924591
-OMA,binary 4-cube,cube,-9.25,0.837736,0.8375554344
-OMA,binary 4-cube,cube,-9,0.83387,0.8336542596
-OMA,binary 4-cube,cube,-8.75,0.829564,0.8295811492
-OMA,binary 4-cube,cube,-8.5,0.824906,0.8253279731
-OMA,binary 4-cube,cube,-8.25,0.821365,0.8208862485
-OMA,binary 4-cube,cube,-8,0.816377,0.8162471347
-OMA,binary 4-cube,cube,-7.75,0.811589,0.8114014284
-OMA,binary 4-cube,cube,-7.5,0.806279,0.8063395616
-OMA,binary 4-cube,cube,-7.25,0.801388,0.8010516014
-OMA,binary 4-cube,cube,-7,0.794947,0.795527253
-OMA,binary 4-cube,cube,-6.75,0.788827,0.7897558656
-OMA,binary 4-cube,cube,-6.5,0.784186,0.7837264424
-OMA,binary 4-cube,cube,-6.25,0.777692,0.777427655
-OMA,binary 4-cube,cube,-6,0.771062,0.7708478624
-OMA,binary 4-cube,cube,-5.75,0.764501,0.7639751365
-OMA,binary 4-cube,cube,-5.5,0.756393,0.7567972934
-OMA,binary 4-cube,cube,-5.25,0.750503,0.7493019329
-OMA,binary 4-cube,cube,-5,0.74116,0.7414764856
-OMA,binary 4-cube,cube,-4.75,0.733327,0.7333082697
-OMA,binary 4-cube,cube,-4.5,0.724377,0.7247845579
-OMA,binary 4-cube,cube,-4.25,0.715425,0.7158926558
-OMA,binary 4-cube,cube,-4,0.706999,0.7066199925
-OMA,binary 4-cube,cube,-3.75,0.69686,0.6969542248
-OMA,binary 4-cube,cube,-3.5,0.687053,0.6868833559
-OMA,binary 4-cube,cube,-3.25,0.676932,0.6763958699
-OMA,binary 4-cube,cube,-3,0.665416,0.6654808824
-OMA,binary 4-cube,cube,-2.75,0.65418,0.6541283088
-OMA,binary 4-cube,cube,-2.5,0.642453,0.64232905
-OMA,binary 4-cube,cube,-2.25,0.629251,0.6300751969
-OMA,binary 4-cube,cube,-2,0.61757,0.6173602531
-OMA,binary 4-cube,cube,-1.75,0.603598,0.6041793749
-OMA,binary 4-cube,cube,-1.5,0.590098,0.5905296295
-OMA,binary 4-cube,cube,-1.25,0.57659,0.5764102682
-OMA,binary 4-cube,cube,-1,0.561796,0.5618230134
-OMA,binary 4-cube,cube,-0.75,0.546285,0.5467723565
-OMA,binary 4-cube,cube,-0.5,0.530669,0.5312658625
-OMA,binary 4-cube,cube,-0.25,0.51566,0.5153144771
-OMA,binary 4-cube,cube,0,0.499051,0.4989328305
-OMA,binary 4-cube,cube,0.25,0.481771,0.48213953
-OMA,binary 4-cube,cube,0.5,0.464951,0.4649574346
-OMA,binary 4-cube,cube,0.75,0.447496,0.4474139023
-OMA,binary 4-cube,cube,1,0.429716,0.4295409985
-OMA,binary 4-cube,cube,1.25,0.410914,0.4113756557
-OMA,binary 4-cube,cube,1.5,0.393234,0.3929597719
-OMA,binary 4-cube,cube,1.75,0.374707,0.3743402355
-OMA,binary 4-cube,cube,2,0.356034,0.3555688635
-OMA,binary 4-cube,cube,2.25,0.337149,0.3367022414
-OMA,binary 4-cube,cube,2.5,0.317265,0.3178014543
-OMA,binary 4-cube,cube,2.75,0.298015,0.2989316969
-OMA,binary 4-cube,cube,3,0.280561,0.280161759
-OMA,binary 4-cube,cube,3.25,0.260918,0.2615633784
-OMA,binary 4-cube,cube,3.5,0.242874,0.2432104635
-OMA,binary 4-cube,cube,3.75,0.225728,0.2251781889
-OMA,binary 4-cube,cube,4,0.207158,0.2075419737
-OMA,binary 4-cube,cube,4.25,0.189451,0.1903763575
-OMA,binary 4-cube,cube,4.5,0.173139,0.1737537958
-OMA,binary 4-cube,cube,4.75,0.157794,0.1577434027
-OMA,binary 4-cube,cube,5,0.142477,0.1424096725
-OMA,binary 4-cube,cube,5.25,0.127701,0.1278112198
-OMA,binary 4-cube,cube,5.5,0.113598,0.1139995781
-OMA,binary 4-cube,cube,5.75,0.100735,0.1010181024
-OMA,binary 4-cube,cube,6,0.0883,0.08890101802
-OMA,binary 4-cube,cube,6.25,0.07738,0.077672659
-OMA,binary 4-cube,cube,6.5,0.067132,0.06734693262
-OMA,binary 4-cube,cube,6.75,0.05798,0.05792704141
-OMA,binary 4-cube,cube,7,0.049452,0.0494054838
-OMA,binary 4-cube,cube,7.25,0.041691,0.04176434438
-OMA,binary 4-cube,cube,7.5,0.035266,0.03497587188
-OMA,binary 4-cube,cube,7.75,0.028962,0.02900333013
-OMA,binary 4-cube,cube,8,0.023864,0.02380209426
-OMA,binary 4-cube,cube,8.25,0.019176,0.01932095209
-OMA,binary 4-cube,cube,8.5,0.015465,0.01550356046
-OMA,binary 4-cube,cube,8.75,0.012209,0.01228999833
-OMA,binary 4-cube,cube,9,0.009558,0.009618353463
-OMA,binary 4-cube,cube,9.25,0.007528,0.007426278628
-OMA,binary 4-cube,cube,9.5,0.005607,0.005652455285
-OMA,binary 4-cube,cube,9.75,0.004235,0.004237909081
-OMA,binary 4-cube,cube,10,0.003133,0.003127130707
-OMA,binary 4-cube,cube,10.25,0.002302,0.002268967767
-OMA,binary 4-cube,cube,10.5,0.001641,0.001617267215
-OMA,binary 4-cube,cube,10.75,0.001081,0.001131262751
-OMA,binary 4-cube,cube,11,0.00082,0.0007757161352
-OMA,binary 4-cube,cube,11.25,0.000529,0.0005208347028
-OMA,binary 4-cube,cube,11.5,0.000352,0.0003419983166
-OMA,binary 4-cube,cube,11.75,0.000198,0.0002193368465
-OMA,binary 4-cube,cube,12,0.000131,0.0001372034356
-OMA,binary 4-cube,cube,12.25,7.8e-05,8.358917117e-05
-OMA,binary 4-cube,cube,12.5,6.3e-05,4.952155067e-05
-OMA,binary 4-cube,cube,12.75,1.5e-05,2.848293209e-05
-OMA,binary 4-cube,cube,13,2.3e-05,1.587689906e-05
-OMA,binary 4-cube,cube,13.25,3e-06,8.561232245e-06
-OMA,binary 4-cube,cube,13.5,4e-06,4.457052421e-06
-OMA,binary 4-cube,cube,13.75,1e-06,2.23563424e-06
-OMA,binary 4-cube,cube,14,3e-06,1.078058811e-06
-OMA,binary 4-cube,cube,14.25,0,4.986126787e-07
-OMA,binary 4-cube,cube,14.5,1e-06,2.206448579e-07
-OMA,binary 4-cube,cube,14.75,0,9.317531269e-08
-OMA,binary 4-cube,cube,15,0,3.744415922e-08
-OMA,binary 4-cube,cube,15.25,0,1.4278147e-08
-OMA,binary 4-cube,cube,15.5,0,5.150115889e-09
-OMA,binary 4-cube,cube,15.75,0,1.751428336e-09
-OMA,binary 4-cube,cube,16,0,5.596110242e-10
-OMA,binary 4-cube,cube,16.25,0,1.673776673e-10
-OMA,binary 4-cube,cube,16.5,0,4.667954911e-11
-OMA,binary 4-cube,cube,16.75,0,1.208899647e-11
-OMA,binary 4-cube,cube,17,0,2.89457347e-12
-OMA,binary 4-cube,cube,17.25,0,6.377121053e-13
-OMA,binary 4-cube,cube,17.5,0,1.287858709e-13
-OMA,binary 4-cube,cube,17.75,0,2.353672812e-14
-OMA,binary 4-cube,cube,18,0,3.996802889e-15
-OMA,binary 4-cube,cube,18.25,0,4.440892099e-16
-OMA,binary 4-cube,cube,18.5,0,0
-OMA,binary 4-cube,cube,18.75,0,0
-OMA,binary 4-cube,cube,19,0,0
-OMA,binary 4-cube,cube,19.25,0,0
-OMA,binary 4-cube,cube,19.5,0,0
-OMA,binary 4-cube,cube,19.75,0,0
-OMA,binary 4-cube,cube,20,0,0
+OMA,4-cube,cube,-10,0.848461,0.8483035258
+OMA,4-cube,cube,-9.75,0.84536,0.8448727825
+OMA,4-cube,cube,-9.5,0.84126,0.8412924591
+OMA,4-cube,cube,-9.25,0.837736,0.8375554344
+OMA,4-cube,cube,-9,0.83387,0.8336542596
+OMA,4-cube,cube,-8.75,0.829564,0.8295811492
+OMA,4-cube,cube,-8.5,0.824906,0.8253279731
+OMA,4-cube,cube,-8.25,0.821365,0.8208862485
+OMA,4-cube,cube,-8,0.816377,0.8162471347
+OMA,4-cube,cube,-7.75,0.811589,0.8114014284
+OMA,4-cube,cube,-7.5,0.806279,0.8063395616
+OMA,4-cube,cube,-7.25,0.801388,0.8010516014
+OMA,4-cube,cube,-7,0.794947,0.795527253
+OMA,4-cube,cube,-6.75,0.788827,0.7897558656
+OMA,4-cube,cube,-6.5,0.784186,0.7837264424
+OMA,4-cube,cube,-6.25,0.777692,0.777427655
+OMA,4-cube,cube,-6,0.771062,0.7708478624
+OMA,4-cube,cube,-5.75,0.764501,0.7639751365
+OMA,4-cube,cube,-5.5,0.756393,0.7567972934
+OMA,4-cube,cube,-5.25,0.750503,0.7493019329
+OMA,4-cube,cube,-5,0.74116,0.7414764856
+OMA,4-cube,cube,-4.75,0.733327,0.7333082697
+OMA,4-cube,cube,-4.5,0.724377,0.7247845579
+OMA,4-cube,cube,-4.25,0.715425,0.7158926558
+OMA,4-cube,cube,-4,0.706999,0.7066199925
+OMA,4-cube,cube,-3.75,0.69686,0.6969542248
+OMA,4-cube,cube,-3.5,0.687053,0.6868833559
+OMA,4-cube,cube,-3.25,0.676932,0.6763958699
+OMA,4-cube,cube,-3,0.665416,0.6654808824
+OMA,4-cube,cube,-2.75,0.65418,0.6541283088
+OMA,4-cube,cube,-2.5,0.642453,0.64232905
+OMA,4-cube,cube,-2.25,0.629251,0.6300751969
+OMA,4-cube,cube,-2,0.61757,0.6173602531
+OMA,4-cube,cube,-1.75,0.603598,0.6041793749
+OMA,4-cube,cube,-1.5,0.590098,0.5905296295
+OMA,4-cube,cube,-1.25,0.57659,0.5764102682
+OMA,4-cube,cube,-1,0.561796,0.5618230134
+OMA,4-cube,cube,-0.75,0.546285,0.5467723565
+OMA,4-cube,cube,-0.5,0.530669,0.5312658625
+OMA,4-cube,cube,-0.25,0.51566,0.5153144771
+OMA,4-cube,cube,0,0.499051,0.4989328305
+OMA,4-cube,cube,0.25,0.481771,0.48213953
+OMA,4-cube,cube,0.5,0.464951,0.4649574346
+OMA,4-cube,cube,0.75,0.447496,0.4474139023
+OMA,4-cube,cube,1,0.429716,0.4295409985
+OMA,4-cube,cube,1.25,0.410914,0.4113756557
+OMA,4-cube,cube,1.5,0.393234,0.3929597719
+OMA,4-cube,cube,1.75,0.374707,0.3743402355
+OMA,4-cube,cube,2,0.356034,0.3555688635
+OMA,4-cube,cube,2.25,0.337149,0.3367022414
+OMA,4-cube,cube,2.5,0.317265,0.3178014543
+OMA,4-cube,cube,2.75,0.298015,0.2989316969
+OMA,4-cube,cube,3,0.280561,0.280161759
+OMA,4-cube,cube,3.25,0.260918,0.2615633784
+OMA,4-cube,cube,3.5,0.242874,0.2432104635
+OMA,4-cube,cube,3.75,0.225728,0.2251781889
+OMA,4-cube,cube,4,0.207158,0.2075419737
+OMA,4-cube,cube,4.25,0.189451,0.1903763575
+OMA,4-cube,cube,4.5,0.173139,0.1737537958
+OMA,4-cube,cube,4.75,0.157794,0.1577434027
+OMA,4-cube,cube,5,0.142477,0.1424096725
+OMA,4-cube,cube,5.25,0.127701,0.1278112198
+OMA,4-cube,cube,5.5,0.113598,0.1139995781
+OMA,4-cube,cube,5.75,0.100735,0.1010181024
+OMA,4-cube,cube,6,0.0883,0.08890101802
+OMA,4-cube,cube,6.25,0.07738,0.077672659
+OMA,4-cube,cube,6.5,0.067132,0.06734693262
+OMA,4-cube,cube,6.75,0.05798,0.05792704141
+OMA,4-cube,cube,7,0.049452,0.0494054838
+OMA,4-cube,cube,7.25,0.041691,0.04176434438
+OMA,4-cube,cube,7.5,0.035266,0.03497587188
+OMA,4-cube,cube,7.75,0.028962,0.02900333013
+OMA,4-cube,cube,8,0.023864,0.02380209426
+OMA,4-cube,cube,8.25,0.019176,0.01932095209
+OMA,4-cube,cube,8.5,0.015465,0.01550356046
+OMA,4-cube,cube,8.75,0.012209,0.01228999833
+OMA,4-cube,cube,9,0.009558,0.009618353463
+OMA,4-cube,cube,9.25,0.007528,0.007426278628
+OMA,4-cube,cube,9.5,0.005607,0.005652455285
+OMA,4-cube,cube,9.75,0.004235,0.004237909081
+OMA,4-cube,cube,10,0.003133,0.003127130707
+OMA,4-cube,cube,10.25,0.002302,0.002268967767
+OMA,4-cube,cube,10.5,0.001641,0.001617267215
+OMA,4-cube,cube,10.75,0.001081,0.001131262751
+OMA,4-cube,cube,11,0.00082,0.0007757161352
+OMA,4-cube,cube,11.25,0.000529,0.0005208347028
+OMA,4-cube,cube,11.5,0.000352,0.0003419983166
+OMA,4-cube,cube,11.75,0.000198,0.0002193368465
+OMA,4-cube,cube,12,0.000131,0.0001372034356
+OMA,4-cube,cube,12.25,7.8e-05,8.358917117e-05
+OMA,4-cube,cube,12.5,6.3e-05,4.952155067e-05
+OMA,4-cube,cube,12.75,1.5e-05,2.848293209e-05
+OMA,4-cube,cube,13,2.3e-05,1.587689906e-05
+OMA,4-cube,cube,13.25,3e-06,8.561232245e-06
+OMA,4-cube,cube,13.5,4e-06,4.457052421e-06
+OMA,4-cube,cube,13.75,1e-06,2.23563424e-06
+OMA,4-cube,cube,14,3e-06,1.078058811e-06
+OMA,4-cube,cube,14.25,0,4.986126787e-07
+OMA,4-cube,cube,14.5,1e-06,2.206448579e-07
+OMA,4-cube,cube,14.75,0,9.317531269e-08
+OMA,4-cube,cube,15,0,3.744415922e-08
+OMA,4-cube,cube,15.25,0,1.4278147e-08
+OMA,4-cube,cube,15.5,0,5.150115889e-09
+OMA,4-cube,cube,15.75,0,1.751428336e-09
+OMA,4-cube,cube,16,0,5.596110242e-10
+OMA,4-cube,cube,16.25,0,1.673776673e-10
+OMA,4-cube,cube,16.5,0,4.667954911e-11
+OMA,4-cube,cube,16.75,0,1.208899647e-11
+OMA,4-cube,cube,17,0,2.89457347e-12
+OMA,4-cube,cube,17.25,0,6.377121053e-13
+OMA,4-cube,cube,17.5,0,1.287858709e-13
+OMA,4-cube,cube,17.75,0,2.353672812e-14
+OMA,4-cube,cube,18,0,3.996802889e-15
+OMA,4-cube,cube,18.25,0,4.440892099e-16
+OMA,4-cube,cube,18.5,0,0
+OMA,4-cube,cube,18.75,0,0
+OMA,4-cube,cube,19,0,0
+OMA,4-cube,cube,19.25,0,0
+OMA,4-cube,cube,19.5,0,0
+OMA,4-cube,cube,19.75,0,0
+OMA,4-cube,cube,20,0,0
 reported,sse_P4.pt,0,-10,0.846432,0.8483035258
 reported,sse_P4.pt,0,-9.75,0.843022,0.8448727825
 reported,sse_P4.pt,0,-9.5,0.839658,0.8412924591

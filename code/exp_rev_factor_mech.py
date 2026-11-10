@@ -10,10 +10,10 @@ No training. Reads the 80 runs listed in data/rev_factor_seeds.csv and the six
                      and per user
   top4_share_min/mean  mask energy on the four largest dimensions, where L = 16
   mode               the three training outcomes:
-                       nonorthogonal  maskcos_max >= 0.1
+                       highcos        maskcos_max >= 0.1
                        concentrated   otherwise, a user with kappa_u < 0.01
-                       orthogonal     otherwise
-  n_orthogonal, n_concentrated, n_nonorthogonal  counts over the runs of the pair
+                       lowcos         otherwise
+  n_lowcos, n_concentrated, n_highcos  counts over the runs of the pair
   ser10/20, worst_user10/20, se10/20   Monte Carlo SER at 1e6 frames per SNR over
                      all users, worst user, standard error (users independent)
   ub10/20            bound (7) without Monte Carlo noise: rho_u in closed form and
@@ -43,7 +43,7 @@ from sse_lib import (DATA, DEVICE, SSE, snr_to_sigma2, sse_union_bound, write_cs
 
 FRAMES = 1_000_000
 CHUNK = 50_000
-NONORTH_COS = 0.1
+HIGH_COS = 0.1
 CONC_KAPPA = 0.01
 FAILED_USER = 0.9
 Z_EXCEED = 3.0
@@ -102,11 +102,11 @@ def active_dims(m):
 
 
 def classify(cos_max, kappas):
-    if cos_max >= NONORTH_COS:
-        return "nonorthogonal"
+    if cos_max >= HIGH_COS:
+        return "highcos"
     if min(kappas) < CONC_KAPPA:
         return "concentrated"
-    return "orthogonal"
+    return "lowcos"
 
 
 def bound7_exact(m, kappas, rho, snrs=SNRS, n_grid=1_000_000):
@@ -141,7 +141,7 @@ def yesno(ser, se, bound):
 HEADER = ["group", "vu", "P", "seed", "L", "model", "maskcos_max", "rho_mean_s2_20",
           "rho_max_s2_20", "kappa_mean", "kappa_min", "kappa_max", "active_dims_mean",
           "active_dims_users", "top4_share_min", "top4_share_mean", "mode",
-          "n_orthogonal", "n_concentrated", "n_nonorthogonal", "ser10", "ser20",
+          "n_lowcos", "n_concentrated", "n_highcos", "ser10", "ser20",
           "worst_user10", "worst_user20", "se10", "se20", "ub10", "ub20", "ub10_lib",
           "ub20_lib", "z10", "z20", "exceeds10", "exceeds20", "closed10", "closed20",
           "exceeds_closed10", "exceeds_closed20", "trained", "gauss20", "gauss20_ratio"]
@@ -200,7 +200,7 @@ def write_rows(rows):
     for r in rows:
         same = [x["mode"] for x in rows
                 if (x["group"], x["vu"], x["P"]) == (r["group"], r["vu"], r["P"])]
-        for mode in ("orthogonal", "concentrated", "nonorthogonal"):
+        for mode in ("lowcos", "concentrated", "highcos"):
             r[f"n_{mode}"] = same.count(mode)
     write_csv(DATA / "rev_factor_mech.csv", HEADER, [[r[k] for k in HEADER] for r in rows])
 

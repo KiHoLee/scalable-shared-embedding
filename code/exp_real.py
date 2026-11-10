@@ -2,7 +2,7 @@
 
 AG News test headlines are tokenized with the bert-base-uncased
 WordPiece tokenizer (vocabulary size 30,522). Four users carry four
-disjoint headline streams. Each frame transmits one token per user,
+separate headline streams. Each frame transmits one token per user,
 mapped to base-16 digits of the raw token identifier (the 16-bit digit
 space 16^4 = 65,536 covers the vocabulary). The models trained in
 exp_main.py on uniform indices are reused unchanged, so this stage

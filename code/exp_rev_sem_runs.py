@@ -3,7 +3,7 @@ streams for all six 4,000-iteration SSE runs, not only the reported one.
 
 The streams, the channel and the scoring are those of exp_rev_semantic.py,
 with its decoders and its Scorer used unchanged: 1,948 complete news items in
-four disjoint user streams, one token per user per frame, a new gain h_u per
+four separate user streams, one token per user per frame, a new gain h_u per
 frame and per user with h_u^2 ~ Exp(1) known at the receiver, and sigma^2 =
 1/(d snr). The received text is scored by two frozen public models that never
 see the channel, textattack/bert-base-uncased-ag-news (revision fe417ad) and
