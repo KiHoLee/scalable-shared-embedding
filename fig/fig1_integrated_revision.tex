@@ -40,7 +40,7 @@
     ($(B.north west)+(0,-\y mm)$) rectangle ($(B.north east)+(0,-\y mm-1.4mm)$);
 }
 \node[lbl,align=center,anchor=north] (Bbot) at ($(B.south)+(0,-0.05)$)
-  {$\mathbf{B}\in\mathbb{R}^{16\times16}$};
+  {$\mathbf{B}\in\mathbb{R}^{V_{\mathrm u}\times L}$\\$V_{\mathrm u}=L=16$};
 \draw[ar,dashed,red!55!black] (E.east) --
   node[font=\scriptsize,below=1.2mm,text=red!55!black,align=center]
   {$16{,}384\times$\\[-0.3em]fewer} (B.west);
@@ -109,7 +109,7 @@
 
 % ---------------- shared-reuse annotation ----------------
 \node[lbl,align=center,text=blue!50!black] at (16.0,-1.75)
-  {same $\mathbf{B}$ in all $P{=}4$ periods and for all $U$ users\\
+  {same $\mathbf{B}$ in all $P=4$ periods and for all $U$ users\\
    $V=16^{4}=65{,}536$ covers all $30{,}522$ tokens\\
    per-step cost independent of $V$};
 

@@ -9,5 +9,9 @@ data/rev_hier_long*.pt
 data/pm/pm_models
 data/pm/pm_models_smoke
 data/pm/*_smoke*
+# per-part files that exp_pm_semfig2.py and exp_pm_content8.py merge
+data/pm/semfig2_parts/
+data/pm/pm_content8_u4.*
+data/pm/pm_content8_u8.*
 # earlier-design file that no script writes (removed in e67e4f3)
 data/rev_full_long_md_eval.csv

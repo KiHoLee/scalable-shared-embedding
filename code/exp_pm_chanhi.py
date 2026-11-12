@@ -14,6 +14,7 @@ Run from the code folder (GPU recommended), after exp_pm.py --part channel:
     python exp_pm_chanhi.py --part hi      # data/pm/pm_figs_hi.csv
     python exp_pm_chanhi.py --part class   # data/pm/pm_figs_class.csv
     python exp_pm_chanhi.py --part oma_adapt   # data/pm/pm_oma_adapt.csv
+    python exp_pm_chanhi.py --part class_hi    # data/pm/pm_figs_class_hi.csv
 Part class evaluates the static entries trained for each frequency-selective
 class, which the figure shows as the static entry. The figure takes only the
 adapted masks from part hi; its flat-trained static entry is stored but not
@@ -89,8 +90,8 @@ def run_oma(snr, taps, adapt, frames=200_000, seed=61):
     """SER of OMA with each user's 16 uncoded bits on 16 real dimensions,
     one bit per dimension, detected by sign after equalization with exact
     gains. Without adapt every user owns eight adjacent subcarriers, as in
-    Fig. 2. With adapt every user owns the blocks of two subcarriers that the
-    adapted masks of Fig. 2 give it (px.adaptive_masks, B = 2)."""
+    Fig. 2. With adapt every user sends on the blocks of two subcarriers that
+    its adapted mask of Fig. 2 weights (px.adaptive_masks, B = 2)."""
     import math
     torch.manual_seed(seed + int(10 * snr) + 100 * taps + (1000 if adapt else 0))
     K = D // 2
@@ -108,7 +109,7 @@ def run_oma(snr, taps, adapt, frames=200_000, seed=61):
         bits = torch.randint(0, 2, (n, px.U, D // px.U), device=DEVICE)
         sym = (2.0 * bits - 1.0) / math.sqrt(D)                          # unit frame energy
         x = torch.zeros(n, D, device=DEVICE)
-        pos = own.float().argsort(-1, descending=True)[..., :D // px.U]  # (n,U,16) owned dims
+        pos = own.float().argsort(-1, descending=True)[..., :D // px.U]  # (n,U,16) dims of each OMA user
         x.scatter_(1, pos.reshape(n, -1), sym.reshape(n, -1))
         xc = torch.complex(x[:, 0::2], x[:, 1::2])
         w = torch.complex(torch.randn(n, px.U, K, device=DEVICE),
@@ -137,12 +138,28 @@ def part_oma_adapt():
     write_csv(pm.DATA / "pm_oma_adapt.csv", ["graph", "channel", "scheme", "snr_db", "frames", "ser"], rows)
 
 
+def part_class_hi():
+    """The static entries trained for each frequency-selective class at 16,
+    18 and 20 dB with 2,000,000 frames, ten times the frames of part class at
+    these SNRs, to resolve where Fig. 2's high-SNR curves cross
+    (data/pm/pm_figs_class_hi.csv)."""
+    E, pd = setup()
+    rows = []
+    for cn in ("fs4", "fs8"):
+        m = load(f"white_U4_L16_{cn}_s1")
+        for snr in (16, 18, 20):
+            v = px.ser(m, pd, 0.0, snr, pm.COND[cn], frames=2_000_000, seed=13)
+            rows.append(["g1", cn, "static_class_L16", snr, 2_000_000, v])
+            print("[class_hi]", cn, snr, f"{v:.3e}", flush=True)
+    write_csv(pm.DATA / "pm_figs_class_hi.csv", ["graph", "channel", "scheme", "snr_db", "frames", "ser"], rows)
+
+
 def main():
     import argparse
     ap = argparse.ArgumentParser()
-    ap.add_argument("--part", default="hi", choices=["hi", "class", "oma_adapt"])
+    ap.add_argument("--part", default="hi", choices=["hi", "class", "oma_adapt", "class_hi"])
     a = ap.parse_args()
-    {"hi": part_hi, "class": part_class, "oma_adapt": part_oma_adapt}[a.part]()
+    {"hi": part_hi, "class": part_class, "oma_adapt": part_oma_adapt, "class_hi": part_class_hi}[a.part]()
 
 
 if __name__ == "__main__":

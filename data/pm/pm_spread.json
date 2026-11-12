@@ -1,0 +1,18 @@
+{
+ "codebook": "pwhite BERT base uncased, seed 0, d = 64",
+ "support_tokens": 22615,
+ "nn_distance_pv": 0.8253140449523926,
+ "eff_subcarriers_of_32_pv": 16.66095733642578,
+ "eff_subcarriers_of_32_uniform": 16.838022232055664,
+ "eff_subcarriers_of_user8_pv": 4.70449686050415,
+ "eff_subcarriers_of_user8_uniform": 4.732716083526611,
+ "eff_user8_q05_q50_q95_uniform": [
+  3.9068005084991455,
+  4.737049102783203,
+  5.552576065063477
+ ],
+ "gauss_ref_of_32": 16.873762130737305,
+ "gauss_ref_of_user8": 4.735933303833008,
+ "coded_oma_min_subcarriers_interleaved": 4,
+ "coded_oma_min_subcarriers_plain": 2
+}

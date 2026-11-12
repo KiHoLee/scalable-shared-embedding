@@ -8,16 +8,22 @@ part corr : correlated content. With probability rho every user receives
             L = 64). Reports SER and the cross-energy of the trained masks.
 part csit : coherence-aware mask selection. Within its coherence time the
             transmitter knows every user's subcarrier gains and, frame by
-            frame, picks from a set of 24 entries the one that assigns four
-            contiguous blocks of eight subcarriers (about four coherence
-            bandwidths at four taps, where the gains stay correlated above
-            0.9 over about two subcarriers) to the four users, maximizing
-            the sum over users of log(1 + SNR) on their blocks. Compared with the
-            same blocks in a fixed order and with the comb pattern (L = U).
-part adapt: masks adapted per update to known subcarrier gains, owner of
-            each block of B subcarriers (users pick in turn, reversing the
-            order every round), with and without water-filling,
-            B = 1, 2, 4, 8, at 4 and 8 taps (supplementary signaling table).
+            frame, selects one of 24 entries. In each entry every mask
+            weights one of four contiguous blocks of eight subcarriers
+            (about four coherence bandwidths at four taps, where the gains
+            stay correlated above 0.9 over about two subcarriers), and the
+            24 entries are the orders of the four users on these blocks.
+            The selected entry has the largest sum over users of
+            log(1 + SNR) on the block that each mask weights. Compared with
+            the same blocks in a fixed order and with the comb pattern
+            (L = U).
+part adapt: masks adapted per update to known subcarrier gains, one value
+            per block of B subcarriers. The users take turns in an order
+            reversed every round, and each sets its weight on the block with
+            its largest sum of log(1 + SNR) among those that no mask weights
+            yet. Two weight levels, or real weights water-filled over these
+            blocks, B = 1, 2, 4, 8, at 4 and 8 taps (supplementary signaling
+            table).
 part sic  : receivers that cancel the other users' decoded tokens, for the
             comb pattern, full overlap, and masks trained for each rho.
 part rs   : one common and one private token per user and frame: common
@@ -42,11 +48,13 @@ part content_snr: the content step at 0, 10 and 20 dB with masks trained
             frames with independent tokens.
 part sig10: the static entries of Fig. 4 trained at the 10 dB they serve,
             for rho = 0 and rho = 0.9, three runs per pattern length.
+part sig10rho: the same for rho = 0.25, 0.5, 0.75 and 1.
 All parts: U = 4, d = 64, BERT codebook whitened under the source
 statistics, weighted minimum-distance decoding over all 30,522 tokens,
 SER on tokens drawn from the source statistics.
 Outputs in data/pm/: pm_corr.csv, pm_corr.json, pm_csit.csv, pm_adapt.csv,
-pm_sic.csv, pm_rs.csv, pm_figs.csv, pm_sig.csv, pm_content_snr.csv, pm_sig10.csv
+pm_sic.csv, pm_rs.csv, pm_figs.csv, pm_sig.csv, pm_content_snr.csv, pm_sig10.csv,
+pm_sig10_rho.csv
 """
 from __future__ import annotations
 
@@ -171,7 +179,8 @@ def gains(N, taps, device):
 
 
 def block_masks(perm):
-    """perm[b] = user of block b; four blocks of 8 subcarriers = 16 dims."""
+    """perm[b] = user whose mask weights block b; four blocks of 8
+    subcarriers = 16 dims."""
     M = torch.zeros(U, D)
     for b, u in enumerate(perm):
         M[u, 16 * b:16 * (b + 1)] = 2.0          # ||m_u||^2 = 64
@@ -229,7 +238,7 @@ def run_csit(E, pd, c, snr, taps, policy, frames=40000, seed=21):
             M = comb[None].expand(n, U, D)
         elif policy == "block_fixed":
             M = entries[0][None].expand(n, U, D)
-        else:   # block_csit: pick the entry with the largest sum of log(1+SNR)
+        else:   # block_csit: select the entry with the largest sum of log(1+SNR)
             snr_k = gam * g.abs() ** 2                                    # (n,U,K)
             blk = torch.log1p(snr_k).view(n, U, 4, 8).sum(-1)            # (n,U,4) users x blocks
             perm_t = torch.tensor(perms, device=DEVICE)                  # (24,4) block->user
@@ -257,8 +266,8 @@ def part_csit(a):
     pdc = src.dist()
     E = pm.codebook(src.W, D, "pwhite", pd=pdc).to(DEVICE)
     pd = pdc.to(DEVICE)
-    # every policy gives each user unit mean-square weight on its own dims and
-    # no cross-energy, so c^2 is the same for all of them
+    # in every policy each mask has energy d (unit mean-square weight) and the
+    # masks do not overlap (no cross-energy), so c^2 is the same for all of them
     comb = torch.zeros(U, D, device=DEVICE)
     for u in range(U):
         comb[u, u::4] = 2.0
@@ -278,11 +287,13 @@ def part_csit(a):
 @torch.no_grad()
 def adaptive_masks(g, B, sig2, c, wf):
     """Per-frame masks from the gains g (n,U,K). The band is cut into units of
-    B subcarriers; users pick units in turn (reversing the order every
-    round, each its best remaining unit by the sum of log(1+SNR)), so every
-    user gets K/(B U)
-    units. With wf, each user water-fills its weight over its units, one
-    value per unit; otherwise its weight is equal on its units."""
+    B subcarriers, one partition for all users. The users take turns
+    (reversing the order every round), and each sets its weight on the unit
+    with its largest sum of log(1+SNR) among those that no mask weights yet,
+    so every mask has weight on K/(B U) units and the masks do not overlap.
+    With wf, each mask holds real weights water-filled over these units, one
+    value per unit; otherwise it holds one level on all of them (two weight
+    levels, that level and zero)."""
     n, Uu, K = g.shape
     nu = K // B
     per = nu // Uu
@@ -442,14 +453,15 @@ def run_rs(E, pd, snr, alpha, scheme, frames=30000, seed=51):
     """Common + private content in every frame: one common token for all
     users and one private token per user. Total frame energy one.
       shared_sic   : common codeword on all d dims (energy alpha), private
-                     codewords on each user's comb dims (energy (1-alpha)/U
-                     each); receiver decodes the common token first, removes
-                     it, then decodes its private token
+                     codewords on the dims that each comb mask weights
+                     (energy (1-alpha)/U each); receiver decodes the common
+                     token first, removes it, then decodes its private token
       shared_nosic : same transmission, private token decoded with the common
                      component left as interference
-      no_overlap_copies : no shared dims; each user's comb dims are halved,
-                     one half carries its copy of the common token (energy
-                     alpha/U), the other its private token
+      no_overlap_copies : no overlap; the dims that each comb mask weights
+                     are halved, one half carries the user's copy of the
+                     common token (energy alpha/U), the other its private
+                     token
     Flat Rayleigh fading per user, exact gains, minimum-distance decoding."""
     torch.manual_seed(seed + int(10 * snr) + int(100 * alpha))
     sig = math.sqrt(1.0 / (D * 10 ** (snr / 10)))
@@ -588,11 +600,13 @@ def part_figs(a):
 def unit_masks(g, ud, sig2):
     """Per-update masks from the gains g (n,U,K) on units of ud real
     dimensions (ud = 2B for blocks of B subcarriers, ud = 1 for single
-    dimensions). With at least U units the users pick units in turn
-    (reversing the order every round, by the sum of log(1+SNR), as
-    adaptive_masks), so every user gets
-    D/(ud U) units. With fewer units than users every user takes its best
-    unit and users share units. One value per unit, ||m_u||^2 = D."""
+    dimensions). With at least U units the users take turns (reversing the
+    order every round), and each sets its level on the unit with its largest
+    sum of log(1+SNR) among those that no mask weights yet, as
+    adaptive_masks, so every mask has weight on D/(ud U) units and the masks
+    do not overlap. With fewer units than users each user sets its level on
+    its best unit, so the masks overlap. One value per unit, two weight
+    levels, ||m_u||^2 = D."""
     n, Uu, K = g.shape
     nu = D // ud
     gam = 1.0 / (D * sig2)
@@ -649,7 +663,7 @@ def part_sig(a):
     of exp_pm.py --part period), static entries trained for rho = 0.9 (three
     training runs each), and masks adapted to known gains on units of
     64/J real dimensions for J = 1..64 values per mask at 4 and 8 taps
-    (J < U shares units among users; J = 64 assigns single dimensions). SER at
+    (with J < U the masks overlap; J = 64 has units of single dimensions). SER at
     10 dB on tokens drawn with the source statistics; the static entries are
     also scored on separate validation frames (seed 21)."""
     src = pm.Source("bert")
@@ -765,6 +779,40 @@ def part_sig10(a):
     write_csv(DATA / "pm_sig10.csv", ["scheme", "channel", "rho", "values", "seed", "ser_val", "ser", "cross_energy"], rows)
 
 
+def part_sig10rho(a):
+    """Static entries of Fig. 4 trained at the 10 dB they serve for the
+    intermediate levels of shared content rho = 0.25, 0.5, 0.75 and 1, every
+    pattern length 1..64, three training runs each, scored on validation
+    frames (seed 21) and on test frames (seed 11), as part sig10 does for
+    rho = 0 and 0.9 (data/pm/pm_sig10_rho.csv). A run whose signs cancel the
+    frame of a shared token (c = 0, possible with one value per mask) is kept
+    as a failed run with nan values."""
+    src = pm.Source("bert")
+    pdc = src.dist()
+    E = pm.codebook(src.W, D, "pwhite", pd=pdc).to(DEVICE)
+    pd = pdc.to(DEVICE)
+    rows = []
+    for rho in (0.25, 0.5, 0.75, 1.0):
+        name = f"shared_rho{rho:g}_at10dB"
+        for L in (64, 32, 16, 8, 4, 2, 1):
+            for s in (1, 2, 3):
+                try:
+                    m = train_rho(E, L, pd, rho, a.iters, seed=s, snr_range=(10.0, 10.0))
+                except ZeroDivisionError:
+                    # with one value per mask the signs of the users can cancel on a
+                    # shared token, so the frame carries no signal and c = 0; the run
+                    # is kept as failed (nan) and never selected on validation frames
+                    rows.append([name, "flat", rho, L, s, float("nan"), float("nan"), float("nan")])
+                    print("[sig10rho]", name, L, s, "failed: signal cancelled (c = 0)", flush=True)
+                    continue
+                v_val = ser(m, pd, rho, 10, pm.COND["flat"], seed=21)
+                v = ser(m, pd, rho, 10, pm.COND["flat"])
+                io = sum(pm.cross_energy(m.masks().detach().cpu())) / U
+                rows.append([name, "flat", rho, L, s, v_val, v, io])
+                print("[sig10rho]", name, L, s, round(v_val, 4), round(v, 4), "iota", round(io, 3), flush=True)
+    write_csv(DATA / "pm_sig10_rho.csv", ["scheme", "channel", "rho", "values", "seed", "ser_val", "ser", "cross_energy"], rows)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--part", required=True)
@@ -773,7 +821,8 @@ def main():
     t0 = time.time()
     {"corr": part_corr, "csit": part_csit, "adapt": part_adapt, "sic": part_sic,
      "rs": part_rs, "figs": part_figs, "sig": part_sig,
-     "content_snr": part_content_snr, "sig10": part_sig10}[a.part](a)
+     "content_snr": part_content_snr, "sig10": part_sig10,
+     "sig10rho": part_sig10rho}[a.part](a)
     print("[done]", a.part, round((time.time() - t0) / 60, 1), "min", flush=True)
 
 
