@@ -1,4 +1,4 @@
-"""Common complex-baseband channel simulator for the revision experiments.
+"""Common complex-baseband channel simulator for the earlier-design experiments.
 
 Every scheme produces a real transmit frame x in R^d with unit average
 energy. Real dimensions (2k, 2k+1) form complex subcarrier k (the

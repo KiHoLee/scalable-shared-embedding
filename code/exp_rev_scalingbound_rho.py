@@ -1,4 +1,4 @@
-"""Revision R2.1/R2.3: bound (7) with and without the residual interference.
+"""Earlier design: bound (7) with and without the residual interference.
 
 For the trained models (Vu,P) = (16,1), (16,2), (16,4), (4,8), (256,2), plus
 (16,8) and the five other (16,4) runs as added references, computes per user:

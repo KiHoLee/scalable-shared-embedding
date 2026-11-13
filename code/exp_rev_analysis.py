@@ -1,4 +1,4 @@
-"""Revision experiments on the analysis (R1.4, R2.1, R2.2, R2.3, R2.6).
+"""Earlier design: experiments on the analysis.
 
 On the trained main model (data/sse_P4.pt, Vu=16, P=4, V=65,536):
   A1  masked-candidate norms ||b_i . mu_u|| (all Vu x U)   -> rev_norms.csv

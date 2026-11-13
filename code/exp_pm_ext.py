@@ -781,7 +781,7 @@ def part_sig10(a):
 
 def part_sig10rho(a):
     """Static entries of Fig. 4 trained at the 10 dB they serve for the
-    intermediate levels of shared content rho = 0.25, 0.5, 0.75 and 1, every
+    intermediate shared-token probabilities rho = 0.25, 0.5, 0.75 and 1, every
     pattern length 1..64, three training runs each, scored on validation
     frames (seed 21) and on test frames (seed 11), as part sig10 does for
     rho = 0 and 0.9 (data/pm/pm_sig10_rho.csv). A run whose signs cancel the

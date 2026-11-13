@@ -1,4 +1,4 @@
-"""Revision R2.1/R2.2/R2.6: a fixed packing kappa_u under rho_u = 0.
+"""Earlier design: a fixed packing kappa_u under rho_u = 0.
 
 Builds, inside the SSE class, the hypercube of OMA: the mask of each user
 weights its own b = log2 Vu of the L = d/P coordinates of a period, the shared unit
@@ -14,7 +14,7 @@ E_h[1 - (1 - Q(h sqrt(gamma d/(U b P))))^(b P)]. At (Vu,P) = (16,4) this design
 is the OMA reference, so it bounds a scheme that needs no training and
 says nothing about what training reaches.
 
-(16,1), (16,2), (16,4), (4,8), (256,2) are the requested points, (2,16) and the
+(16,1), (16,2), (16,4), (4,8), (256,2) are the points of the factorization study, (2,16) and the
 non-divisible (8,4) are added checks, and (16,8) is listed to record that the
 design does not fit there (U log2 V = 128 > d = 64).
 

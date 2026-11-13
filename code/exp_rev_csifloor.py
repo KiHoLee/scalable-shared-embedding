@@ -1,4 +1,4 @@
-"""Revision R1.6: error floor under imperfect channel estimates, flat fading.
+"""Earlier design: error floor under imperfect channel estimates, flat fading.
 Table II stops at 20 dB. This script holds the NMSE fixed and lets the noise
 vanish, so the values above the trained range of 0-20 dB are limit cases and
 not operating points (a pilot-based estimate would improve with the SNR).

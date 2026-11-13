@@ -1,4 +1,4 @@
-"""Revision: seed spread of the Proposed SSE with a 20,000-iteration
+"""Earlier design: seed spread of the Proposed SSE with a 20,000-iteration
 cosine-decay budget (seeds 1-5), evaluated over 5e5 frames at 10 and
 20 dB. Usage: python exp_rev_seeds_long.py <seed>. Output rows are
 appended to data/rev_seeds_sse_20k.csv.

@@ -1,5 +1,5 @@
 """Numerical check of the closed-form scaling bound (Remark 1 of the
-revised letter):
+earlier design):
 
     SER_u <= 8 P ln(e P (Vu-1)/2) / (kappa_u d gamma),
     kappa_u = min_{i!=j} ||(b_i - b_j) . mu_u||^2 / c^2,

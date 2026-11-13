@@ -1,4 +1,4 @@
-"""Revision experiment R1.1 / R2.5 / R1.3: task-level and semantic metrics
+"""Earlier design: task-level and semantic metrics
 on the real AG News token streams, and the measured transmit energy.
 
 Stream construction is identical to exp_real.py (2,000 AG News test

@@ -2,7 +2,7 @@
 multiple access, from the CSV files in data/pm/. Plotting only, no
 simulation. Figs. 2-4 of the manuscript (fig2_pm, fig4_pm, fig5_pm) share
 one 8:6 canvas of 3.0 x 2.25 in (W43, H43), drawn at the printed width
-(\\resw = 3.0in in main_revision.tex, 0.86 of the column), so that the
+(\\resw = 3.0in in the LaTeX source, 0.86 of the column), so that the
 8 pt axis labels, the 7 pt tick labels and the 6.5 pt legends and
 annotations (LEG43, ANN43) print at their designed size; they share the
 same axes box (BOX43) and keep their legends inside the axes. The
@@ -11,11 +11,16 @@ and axes box (BOX_R2), and fig_codebook_pm and fig_plen_pm keep their
 sizes; save() refuses a figure whose legend covers
 a curve, a marker, a reference line or an annotation, or whose text leaves
 the canvas. One style per scheme (STYLE): the static entries of the mask
-set (trained masks) are blue circles, adapted masks red squares, OMA black
+set (trained masks) are blue circles, adapted masks red squares (pink
+squares in Figs. 2 and 4 for the overlap chosen for rho = 0.9), OMA black
 diamonds, the untrained pattern with L = U (masks without overlap)
 orange down-triangles and full overlap
-purple triangles; a dashed line with open markers marks the second variant
-of the same scheme.
+purple triangles. Line style and marker face carry the second attribute
+of each figure: the tap class in Fig. 2 (dashed line and hollow marker
+for 8 taps), rho in Fig. 3 (solid 0, dash-dot 0.7, dashed 0.9, static
+entries filled and adapted masks hollow), and the update interval F in
+Fig. 4 (solid and dashed lines in turn, filled markers, dash-dotted for
+rho = 0.9).
 
 Metric. "SER" on every axis is the semantic error rate of the manuscript,
   SER_u = E[1 - zeta(s_u, s_hat_u)]
@@ -32,9 +37,12 @@ axis is the loss 1 - eta.
                     OMA, coded OMA with the bit interleaver of
                     pm_oma_coded_il.json (on every U-th subcarrier and on the
                     adapted blocks), ToDMA, the static entry trained for the
-                    class, and masks adapted to the known gains, all from
-                    pm_semfig2.csv (exp_pm_semfig2.py); points with fewer
-                    than 20 token errors are not drawn
+                    class, and masks adapted to the known gains, from
+                    pm_semfig2.csv (exp_pm_semfig2.py), and the adapted
+                    masks with the overlap chosen for rho = 0.9 (pink
+                    squares, pm_content_ov_snr.csv; exp_pm_content_ovfig.py
+                    --part snr); points with fewer than 20 token errors are
+                    not drawn, and the SER axis is cut at 1e-6
   fig/fig3_pm.pdf : supplementary figure, content step (not in the
                     manuscript), static entry L = 16, untrained pattern
                     L = U and full overlap. SER at 10 dB versus the shared-token
@@ -43,17 +51,24 @@ axis is the loss 1 - eta.
                     --part content)
   fig/fig4_pm.pdf : Fig. 3 of the manuscript (content and signaling steps).
                     SER at 10 dB versus the mask size J, 1 to 64 for every
-                    curve: static entries trained at 10 dB for rho = 0, 0.5,
-                    0.75 and 0.9, best of three runs by the SER on validation
-                    frames (pm_semfig4_static.csv; exp_pm_semfig34.py --part
-                    static) and adapted masks (pm_semfig4_adapted.csv;
-                    exp_pm_semfig4a.py)
+                    curve, rho = 0, 0.7 and 0.9: static entries trained at
+                    10 dB under flat fading, best of three runs by the SER on
+                    validation frames (pm_semfig4_static.csv and
+                    pm_semfig4_static_rho0.7.csv; exp_pm_semfig34.py --part
+                    static), and adapted masks at 8 taps, two-level at rho = 0
+                    (pm_semfig4_adapted.csv; exp_pm_semfig4a.py) and with the
+                    overlap chosen for rho (pm_content_ov_j_rho0.7.csv,
+                    pm_content_ov_j.csv; exp_pm_content_ovfig.py --part jsweep)
   fig/fig5_pm.pdf : Fig. 4 of the manuscript, trade-off. Loss 1 - eta of
                     the net efficiency (9) on a log axis, adapted masks at
                     10 dB and four taps versus J for an update every 1, 3,
                     10, 30 or 100 frames, and the static entry, from the TER,
                     since the payload counts bits (pm_semfig4_adapted.csv,
-                    pm_semfig2.csv)
+                    pm_semfig2.csv), and at rho = 0.9 (dash-dotted) the
+                    adapted masks with the overlap chosen for rho, updated
+                    every 100 frames (pink squares, pm_content_ov_j.csv),
+                    and the static entry trained for rho = 0.9 at 10 dB
+                    (thin line, pm_content_fs.csv, static_trained)
   fig/fig_codebook_pm.pdf : supplementary figure. (a) SER and (b) topic accuracy
                     versus SNR, U = 4, flat fading, L = 16, for the
                     proposed BERT codebook, a random codebook, and OMA
@@ -78,7 +93,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA, FIG = ROOT / "data" / "pm", ROOT / "fig"
 plt.rcParams.update({
     "font.family": "serif", "font.serif": ["Times New Roman", "Times", "DejaVu Serif"],
-    "mathtext.fontset": "stix", "font.size": 8, "axes.labelsize": 8,
+    "mathtext.fontset": "cm", "font.size": 8, "axes.labelsize": 8,
     "legend.fontsize": 6.6, "xtick.labelsize": 7, "ytick.labelsize": 7,
     "lines.linewidth": 1.1, "lines.markersize": 3.6, "axes.linewidth": 0.6,
     "grid.linewidth": 0.4, "grid.alpha": 0.5,
@@ -89,7 +104,8 @@ plt.rcParams.update({
 STYLE = {"static": ("C0", "o"), "adapted": ("C3", "s"), "oma": ("k", "d"),
          "no_overlap": ("C1", "v"), "full_overlap": ("C4", "^"),
          "random": ("C2", "^"), "coded_comb": ("C7", "h"),
-         "coded_adapted": ("C5", "p"), "todma": ("C8", "v")}
+         "coded_adapted": ("C5", "p"), "todma": ("C8", "v"),
+         "adapted_ov": ("C6", "s")}            # adapted masks with the overlap chosen for rho (pink)
 
 
 def rows(name):
@@ -113,6 +129,7 @@ W43, H43 = 3.0, 2.25                  # 8:6 canvas of Figs. 2-4 (inches), drawn 
 # 7 pt tick labels; the axes box takes the rest of the canvas
 BOX43 = dict(left=0.152, right=0.976, bottom=0.176, top=0.971)
 LEG43 = 6.5                           # legend font of Figs. 2-4 (pt), one size for the three figures
+LEGKW43 = dict(handlelength=1.6, labelspacing=0.12, borderpad=0.25, columnspacing=0.8)  # Figs. 2-4
 ANN43 = 6.5                           # annotation font of Figs. 3 and 4 (pt)
 BOX_R2 = dict(left=0.19, right=0.97, bottom=0.215, top=0.955)   # supplementary fig3_pm, 2.6 in canvas
 
@@ -136,14 +153,28 @@ def check_layout(fig, name):
             b = a.get_window_extent(rend)
             if b.x0 < fb.x0 - 0.5 or b.y0 < fb.y0 - 0.5 or b.x1 > fb.x1 + 0.5 or b.y1 > fb.y1 + 0.5:
                 raise RuntimeError(f"{name}: text outside the canvas: {a.get_text()!r}")
-        leg = ax.get_legend()
-        if leg is None:
-            continue
+        from matplotlib.legend import Legend
+        for leg in [a for a in ax.get_children() if isinstance(a, Legend)]:   # every legend
+            _check_legend(fig, ax, leg, rend, name)
+    for leg in fig.legends:                         # figure legends: inside the canvas, off the axes
+        lb = leg.get_window_extent(rend)
+        if lb.x0 < fb.x0 - 0.5 or lb.y0 < fb.y0 - 0.5 or lb.x1 > fb.x1 + 0.5 or lb.y1 > fb.y1 + 0.5:
+            raise RuntimeError(f"{name}: figure legend leaves the canvas")
+        for ax in fig.axes:
+            if lb.overlaps(ax.bbox):
+                raise RuntimeError(f"{name}: figure legend overlaps the axes")
+
+
+def _check_legend(fig, ax, leg, rend, name):
+    # the legend tests of check_layout for one legend
+    if True:
         lb = leg.get_window_extent(rend)
         ab = ax.bbox
         if lb.x0 < ab.x0 - 0.5 or lb.y0 < ab.y0 - 0.5 or lb.x1 > ab.x1 + 0.5 or lb.y1 > ab.y1 + 0.5:
             raise RuntimeError(f"{name}: legend leaves the axes box")
         for line in ax.get_lines():
+            if line.get_gid() == "ref":           # horizontal reference lines may pass under a legend
+                continue
             xy = np.asarray(line.get_xydata(), float)
             if len(xy) == 0:
                 continue
@@ -205,7 +236,7 @@ def fig_codebook():
         x, y = curve(rs, "topic_acc", **sel)
         ax[1].plot(x, 100 * y, color=col, ls=ls, marker=mk, markevery=2, label=lab)
     ax[1].axhline(100 * clean, color="0.5", lw=0.7, ls="--", label="_nolegend_")
-    ax[1].text(20, 100 * clean + 1.2, "error-free text", fontsize=5.8, color="0.35", ha="right", va="bottom")
+    ax[1].text(0, 100 * clean + 1.2, "error-free text", fontsize=5.8, color="0.35", ha="left", va="bottom")
     ax[0].set_yscale("log")
     ax[0].set_ylim(0.01, 1.0)                     # labels at 10^-2, 10^-1 and 10^0
     ax[0].set_ylabel("SER")
@@ -274,47 +305,79 @@ def fig_channel():
       coded_il_adapted  the same interleaved code on the blocks that each
                         adapted mask weights
       adapted_B2        adapted masks on blocks of two subcarriers
+    and, from data/pm/pm_content_ov_snr.csv (exp_pm_content_ovfig.py --part
+    snr), the adapted masks on the same blocks with the overlap chosen for
+    rho = 0.9 (rows role best, split test), the only curves at rho = 0.9;
+    OMA, coded OMA and the two-level adapted masks do not change with rho.
     Points that rest on fewer than MIN_ERR = 20 token errors (column
     errors) are not drawn, nor points without errors. Colour and marker
     mark the scheme, line style and marker face the tap class (solid line
     and filled marker 4 taps, dashed line and hollow marker 8 taps); the
     legend shows the tap classes by the marker face only, without a line,
-    so that they do not read as two more schemes (author's choice)."""
+    so that they do not read as two more schemes (author's choice), in a
+    second framed box beside the scheme legend. The SER axis is cut at 1e-6
+    (author's choice); the six 8-tap points below it, at 18 and 20 dB, leave
+    through the lower edge and stay in the CSV files."""
     from matplotlib.lines import Line2D
     rs = rows("pm_semfig2.csv")
     fig = plt.figure(figsize=(W43, H43))
     fig.subplots_adjust(**BOX43)
     ax = fig.add_subplot(111)
+    # one legend vocabulary for Figs. 2 to 4: Static (static entry), Adapted (adapted
+    # masks), ", rho = 0.9" for the masks with the overlap chosen for rho = 0.9 (pink)
     sty = {"oma": (*STYLE["oma"], "OMA"),
-           "coded_il_comb": (*STYLE["coded_comb"], "Coded OMA, interleaved"),
+           "coded_il_comb": (*STYLE["coded_comb"], "Coded OMA"),
            "todma": (*STYLE["todma"], "ToDMA"),
-           "static_class_L16": (*STYLE["static"], "Static entry"),
-           "coded_il_adapted": (*STYLE["coded_adapted"], "Coded OMA, adapted blocks"),
-           "adapted_B2": (*STYLE["adapted"], "Adapted masks")}
-    hs = []
+           "static_class_L16": (*STYLE["static"], "Static"),
+           "coded_il_adapted": (*STYLE["coded_adapted"], "Coded OMA, adapted"),
+           "adapted_B2": (*STYLE["adapted"], "Adapted")}
+    hs = {}
     for sc, (col, mk, lab) in sty.items():
         for cn, ls in (("fs4", "-"), ("fs8", "--")):
             pts = sorted((float(r["snr_db"]), float(r["ser_sem"])) for r in rs
                          if r["channel"] == cn and r["scheme"] == sc and float(r["ser_sem"]) > 0
                          and int(r["errors"]) >= MIN_ERR)
             mfc = "white" if ls == "--" else col
+            # coded OMA and ToDMA mark 2, 6, ..., 18 dB, between the markers of the
+            # curves they nearly coincide with (markevery offset, so no marker hides another)
+            me = (1, 2) if sc in ("coded_il_comb", "coded_il_adapted", "todma") else 2
             ax.plot([q[0] for q in pts], [q[1] for q in pts], color=col, ls=ls, marker=mk,
-                    markevery=2, mfc=mfc, label=f"{lab}, {cn}")
-        hs.append(Line2D([], [], color=col, ls="-", marker=mk, label=lab))
+                    markevery=me, mfc=mfc, label=f"{lab}, {cn}")
+        hs[sc] = Line2D([], [], color=col, ls="-", marker=mk, label=lab)
+    col_o, mk_o = STYLE["adapted_ov"]                # overlap chosen for rho = 0.9
+    ro = rows("pm_content_ov_snr.csv")
+    for cn, ls in (("fs4", "-"), ("fs8", "--")):
+        pts = sorted((float(r["snr_db"]), float(r["ser_sem"])) for r in ro
+                     if r["channel"] == cn and r["role"] == "best" and r["split"] == "test"
+                     and float(r["ser_sem"]) > 0 and int(r["errors"]) >= MIN_ERR)
+        # markers at 2, 6, ..., 18 dB, between those of the two-level adapted masks
+        ax.plot([q[0] for q in pts], [q[1] for q in pts], color=col_o, ls=ls, marker=mk_o,
+                markevery=(1, 2), mfc="white" if ls == "--" else col_o,
+                label=f"Adapted masks, overlap, rho 0.9, {cn}")
+    hs["adapted_ov"] = Line2D([], [], color=col_o, ls="-", marker=mk_o,
+                              label=r"Adapted, $\rho=0.9$")
+    # legend order: the proposal first, then the compared schemes in the
+    # order of the paragraph on the compared schemes
+    hs = [hs[k] for k in ("static_class_L16", "adapted_B2", "adapted_ov", "oma", "coded_il_comb",
+                          "coded_il_adapted", "todma")]
     # tap classes by the marker face only, without a line (author's choice)
-    hs.append(Line2D([], [], color="0.3", ls="none", marker="o", mfc="0.3", label="4 taps"))
-    hs.append(Line2D([], [], color="0.3", ls="none", marker="o", mfc="white", label="8 taps"))
+    hs_taps = [Line2D([], [], color="0.3", ls="none", marker="o", mfc="0.3", label="4 taps"),
+               Line2D([], [], color="0.3", ls="none", marker="o", mfc="white", label="8 taps")]
     ax.set_yscale("log")
-    ax.set_ylim(8e-9, 2.0)                     # room below the curves for the legend; the top
-                                               # spine clears the markers at 0 dB (SER up to 0.73)
+    ax.set_ylim(1e-6, 2.0)                     # cut at 10^-6 (author): curves below leave through
+                                               # the lower edge; the top spine clears the markers at 0 dB
     ax.set_xlim(-0.5, 20.5)
     ax.set_xlabel("SNR (dB)")
     ax.set_ylabel("SER")
     ax.set_xticks([0, 4, 8, 12, 16, 20])
-    ax.set_yticks([1e-7, 1e-5, 1e-3, 1e-1])
+    ax.set_yticks([1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1.0])
     ax.grid(True, which="both")
-    legend_in(ax, handles=hs, loc="lower left", handlelength=1.6, fontsize=LEG43,
-              labelspacing=0.12, borderpad=0.25)
+    leg = legend_in(ax, handles=hs, loc="lower left", fontsize=LEG43, **LEGKW43)   # schemes
+    ax.add_artist(leg)
+    fig.canvas.draw()
+    lb = leg.get_window_extent(fig.canvas.get_renderer()).transformed(ax.transAxes.inverted())
+    legend_in(ax, handles=hs_taps, loc="lower left", bbox_to_anchor=(lb.x1 + 0.01, 0.0),
+              fontsize=LEG43, **LEGKW43)       # tap classes, a second box beside the first
     save(fig, "fig2_pm.pdf", tight=False)
 
 
@@ -362,73 +425,130 @@ def fig_content():
     save(fig, "fig3_pm.pdf", tight=False)
 
 
-def fig_signal(rhos=(0.0, 0.5, 0.75, 0.9)):
+def fig_signal(rhos=(0.0, 0.7, 0.9), taps="fs8"):
     """Fig. 3: SER (semantic error rate) at 10 dB versus the mask size J
-    (values per mask). Static entries trained at the 10 dB they serve for
-    the shared-token probabilities rho come from
-    data/pm/pm_semfig4_static.csv (exp_pm_semfig34.py --part static); each
-    is the best of three training runs by the SER on separate validation
-    frames (column ser_sem_val, failed runs with nan skipped), and the
-    plotted SER comes from the test frames (column ser_sem). Adapted masks
-    come from data/pm/pm_semfig4_adapted.csv (exp_pm_semfig4a.py, 10 dB),
-    with J blocks of 64/J real dimensions, where the masks overlap when J < U.
-    The static entries share the blue of the scheme and differ in line
-    style and shade by rho."""
-    rs = []
-    for r in rows("pm_semfig4_adapted.csv"):
-        if float(r["snr_db"]) == 10:
-            rs.append(dict(r, scheme="adapted", ser=r["ser_sem"], ser_val=""))
-    for r in rows("pm_semfig4_static.csv"):          # static entries trained at 10 dB
-        rs.append(dict(r, scheme=f"static_rho{float(r['rho']):g}", ser=r["ser_sem"],
-                       ser_val=r["ser_sem_val"]))
+    (values per mask) for the shared-token probabilities rho = 0, 0.7 and 0.9,
+    line style by rho for both schemes. Static entries (filled blue circles)
+    trained at the 10 dB they serve under flat fading come from
+    data/pm/pm_semfig4_static.csv (exp_pm_semfig34.py --part static) and, for
+    rho = 0.7, pm_semfig4_static_rho0.7.csv (--part static --rho 0.7); each is
+    the best of three training runs by the SER on separate validation frames
+    (column ser_sem_val, failed runs with nan skipped), and the plotted SER
+    comes from the test frames (column ser_sem). Adapted masks (hollow
+    markers) at 8 taps, where they gain most over the static entries
+    (author's choice), with J blocks of 64/J real dimensions (the masks
+    overlap when J < U): at rho = 0 the two-level masks (red squares,
+    pm_semfig4_adapted.csv, exp_pm_semfig4a.py), whose best overlap is zero
+    (pm_content_ov.csv), and at rho = 0.7 and 0.9 the masks with the overlap
+    chosen for rho (red hollow squares, pm_content_ov_j_rho0.7.csv and
+    pm_content_ov_j.csv, exp_pm_content_ovfig.py --part jsweep --rho 0.7 and
+    --part jsweep, rows role best, split test). Coded OMA, which depends on
+    neither J nor rho, gives two constant reference lines with the markers of
+    Fig. 2: under flat fading (pm_content_ov_codedref.csv,
+    exp_pm_content_ovfig.py --part codedref) for the static entries, and at
+    8 taps on the blocks of the adapted masks (pm_semfig2.csv,
+    coded_il_adapted) for the adapted masks. One framed legend column at the
+    lower left names the four schemes with one marker and one colour each
+    (every static entry a blue circle, every adapted mask a red square, as in
+    the legend); rho is written on the graph with arrows that end in small
+    upright ellipses on the curves and is also marked by the line style,
+    solid 0, dash-dot 0.7, dashed 0.9 (author's choice, so that the curves
+    keep most of the height of the axes)."""
+    from matplotlib.legend_handler import HandlerTuple
+    from matplotlib.lines import Line2D
+    stat = defaultdict(dict)                        # rho -> J -> (validation SER, test SER)
+    for r in rows("pm_semfig4_static.csv") + rows("pm_semfig4_static_rho0.7.csv"):   # trained at 10 dB
+        if r["ser_sem"] in ("", "nan") or r["ser_sem_val"] in ("", "nan"):
+            continue
+        rho, J, key = float(r["rho"]), int(r["values"]), float(r["ser_sem_val"])
+        if J not in stat[rho] or key < stat[rho][J][0]:
+            stat[rho][J] = (key, float(r["ser_sem"]))
+    adap = {0.0: {int(r["values"]): float(r["ser_sem"]) for r in rows("pm_semfig4_adapted.csv")
+                  if r["channel"] == taps and float(r["snr_db"]) == 10}}
+    for rho, fname in ((0.7, "pm_content_ov_j_rho0.7.csv"), (0.9, "pm_content_ov_j.csv")):
+        adap[rho] = {int(r["J"]): float(r["ser_sem"]) for r in rows(fname)
+                     if r["channel"] == taps and r["role"] == "best" and r["split"] == "test"}
     fig = plt.figure(figsize=(W43, H43))
     fig.subplots_adjust(**BOX43)
     ax = fig.add_subplot(111)
-    col, mk = STYLE["static"]
-    shade = {0.0: col, 0.25: "#2c7fb8", 0.5: "#3d8fd0", 0.75: "#5aa5dd", 0.9: "#0b4f8a", 1.0: "#08306b"}
-    lstyle = {0.0: "-", 0.25: (0, (5, 1, 1, 1)), 0.5: "-.", 0.75: ":", 0.9: "--", 1.0: (0, (1, 1))}
-    spec = [(("flat", f"static_rho{r:g}"), shade[r], mk, lstyle[r],
-             "white" if r >= 0.75 else None, rf"Static entry, $\rho={r:g}$") for r in rhos]
-    spec += [(("fs4", "adapted"), *STYLE["adapted"], "-", None, "Adapted masks, 4 taps"),
-             (("fs8", "adapted"), *STYLE["adapted"], "--", "white", "Adapted masks, 8 taps")]
-    for k, ((cn, sc), c_, m_, ls, mfc, lab) in enumerate(spec):
-        best = {}                       # static entries: best of three runs on validation frames
-        for r in rs:
-            if r["channel"] == cn and r["scheme"] == sc:
-                if r["ser"] in ("", "nan") or (r["ser_val"] not in ("",) and r["ser_val"] == "nan"):
-                    continue
-                v_, key = int(r["values"]), float(r["ser_val"]) if r["ser_val"] else 0.0
-                if v_ not in best or key < best[v_][0]:
-                    best[v_] = (key, float(r["ser"]))
-        if not best:
-            continue
-        xs = sorted(best)
-        ax.plot(xs, [best[q][1] for q in xs], color=c_, marker=m_, ls=ls,
-                mfc=mfc if mfc else c_, label=lab)
-    ax.axvline(64, color="0.5", lw=0.6, ls=":", label="_nolegend_")
-    ax.text(58, 2.6e-2, "full-length mask", ha="right", va="bottom",
-            fontsize=ANN43, color="0.35")                       # between the static and adapted curves
-    ax.axvline(4, ymax=0.5, color="0.5", lw=0.6, ls="--", label="_nolegend_")  # J = U, below the legend
-    ax.text(3.7, 5.6e-4, "$J=U$", ha="right", va="bottom", fontsize=ANN43, color="0.35")
+    lstyle = {0.0: "-", 0.7: "-.", 0.9: "--"}
+    sshade = {r: STYLE["static"][0] for r in rhos}          # one colour per scheme, as in the legend
+    ashade = {r: STYLE["adapted"][0] for r in rhos}
+    amark = {r: STYLE["adapted"][1] for r in rhos}
+    for rho in rhos:                                # legend column 1: Static
+        xs = sorted(stat[rho])
+        ax.plot(xs, [stat[rho][q][1] for q in xs], color=sshade[rho], marker=STYLE["static"][1],
+                ls=lstyle[rho], mfc=sshade[rho], label=rf"Static, $\rho={rho:g}$")
+    js_ = [1, 2, 4, 8, 16, 32, 64]                 # coded OMA: constant over J and rho
+    cr = [float(r["ser_sem"]) for r in rows("pm_content_ov_codedref.csv")
+          if r["channel"] == "flat" and float(r["snr_db"]) == 10]
+    ca = [float(r["ser_sem"]) for r in rows("pm_semfig2.csv")
+          if r["channel"] == taps and r["scheme"] == "coded_il_adapted" and float(r["snr_db"]) == 10]
+    assert len(cr) == 1 and len(ca) == 1
+    ax.plot(js_, [cr[0]] * len(js_), color=STYLE["coded_comb"][0], marker=STYLE["coded_comb"][1],
+            ls=":", lw=1.0, mfc=STYLE["coded_comb"][0], label="Coded OMA", gid="ref")
+    for rho in rhos:                                # legend column 2: Adapted
+        xs = sorted(adap[rho])
+        ax.plot(xs, [adap[rho][q] for q in xs], color=ashade[rho], marker=amark[rho], ls=lstyle[rho],
+                mfc="white", label=rf"Adapted, $\rho={rho:g}$", **({"ms": 3.6} if amark[rho] == "D" else {}))
+    ax.plot(js_, [ca[0]] * len(js_), color=STYLE["coded_adapted"][0], marker=STYLE["coded_adapted"][1],
+            ls=":", lw=1.0, mfc="white", label="Coded OMA, adapted", gid="ref")
+    C_JU, C_FULL = "#2ca02c", "#9467bd"             # boundary lines and their labels (author)
+    ax.axvline(64, color=C_FULL, lw=1.4, ls="--", zorder=1.8, label="_nolegend_")   # dashed as J = U
+    ax.text(58, 1.3, "full-length mask", ha="right", va="top",
+            fontsize=ANN43, color=C_FULL)                       # at the top, left of the x = 64 line
+
+    def at(curve, x):                               # SER of a curve at mask size x, log-log
+        xs_ = sorted(curve)
+        return float(np.exp(np.interp(np.log2(x), np.log2(xs_), np.log([curve[q] for q in xs_]))))
+
+    from matplotlib.patches import Ellipse
+    from matplotlib.transforms import ScaledTranslation
+
+    def arrow(txt, x, y, dx, dy, col):              # rho written on the graph with an arrow (author)
+        ax.add_patch(Ellipse((0, 0), width=0.035, height=0.06, fill=False, ec=col, lw=0.6, zorder=5,
+                             transform=fig.dpi_scale_trans + ScaledTranslation(x, y, ax.transData)))
+        ax.annotate(txt, xy=(x, y), xytext=(dx, dy), textcoords="offset points", fontsize=ANN43,
+                    color=col, ha="center", va="center",
+                    arrowprops=dict(arrowstyle="-|>", color=col, lw=0.6, mutation_scale=6,
+                                    shrinkA=1.0, shrinkB=2.2))
+    sv = {r: {q: v[1] for q, v in stat[r].items()} for r in rhos}
+    # offsets in points from the curve: static labels in one row above, adapted labels beside
+    arrow(r"$\rho=0$", 12, at(sv[0.0], 12), -6, 22, sshade[0.0])
+    arrow(r"$\rho=0.7$", 22.6, at(sv[0.7], 22.6), -6, 20, sshade[0.7])   # below "full-length mask"
+    arrow(r"$\rho=0.9$", 45, at(sv[0.9], 45), -6, -22, sshade[0.9])
+    arrow(r"$\rho=0$", 11.3, at(adap[0.0], 11.3), 14, 18, ashade[0.0])
+    arrow(r"$\rho=0.9$", 22.6, at(adap[0.9], 22.6), -16, -14, ashade[0.9])
+    arrow(r"$\rho=0.7$", 45, at(adap[0.7], 45), -14, -17, ashade[0.7])
+    ax.axvline(4, ymin=0.36, color=C_JU, lw=1.4, ls="--", zorder=1.8, label="_nolegend_")  # above the legend
+    ax.text(3.7, 1.25, "$J=U$", ha="right", va="top", fontsize=ANN43, color=C_JU)
     ax.set_xscale("log", base=2)
     ax.set_yscale("log")
     ax.set_xticks([1, 2, 4, 8, 16, 32, 64])
     ax.set_xticklabels(["1", "2", "4", "8", "16", "32", "64"])
     ax.set_xlim(0.8, 80)
-    ax.set_ylim(5e-4, 60.0)                                   # headroom for the legend
+    ax.set_ylim(1.2e-4, 2.0)                                    # room for the legend column
     ax.set_yticks([1e-3, 1e-2, 1e-1, 1.0])
     ax.set_xlabel("Mask size $J$ (values per mask)")
     ax.set_ylabel("SER at 10 dB")
     ax.grid(True, which="both")
-    legend_in(ax, loc="upper right", bbox_to_anchor=(0.935, 0.995), fontsize=LEG43,
-              labelspacing=0.12, borderpad=0.25)              # left of the x = 64 line
+    # one framed legend column at the lower left, as in Fig. 2 (author): the schemes, one marker
+    # each; rho is written on the graph; the coded OMA lines may pass under the legend
+    h_st = Line2D([], [], color=STYLE["static"][0], marker=STYLE["static"][1], ls="-")
+    h_a0 = Line2D([], [], color=STYLE["adapted"][0], marker=STYLE["adapted"][1], mfc="white", ls="-")
+    h_co = Line2D([], [], color=STYLE["coded_comb"][0], marker=STYLE["coded_comb"][1], ls=":")
+    h_ca = Line2D([], [], color=STYLE["coded_adapted"][0], marker=STYLE["coded_adapted"][1],
+                  mfc="white", ls=":")
+    legend_in(ax, handles=[h_st, h_a0, h_co, h_ca],
+              labels=["Static", "Adapted", "Coded OMA", "Coded OMA, adapted"], loc="lower left",
+              fontsize=LEG43, **LEGKW43)
     save(fig, "fig4_pm.pdf", tight=False)
 
 
 # Update intervals F of Fig. 4 and their styles: one red ramp for the adapted masks (darker =
 # rarer updates), solid lines with filled markers and dashed lines with hollow markers in turn
-F_STYLE = ((1, "#fb8a6a", "-", True), (3, "#f0553a", "--", False), (10, "#d62728", "-", True),
-           (30, "#a81419", "--", False), (100, "#6b0a0f", "-", True))
+F_STYLE = ((1, "#fb8a6a", "-", True), (3, "#f0553a", "--", True), (10, "#d62728", "-", True),
+           (30, "#a81419", "--", True), (100, "#6b0a0f", "-", True))   # filled: four taps (Figs. 2-4)
 
 
 def fig_tradeoff():
@@ -448,7 +568,12 @@ def fig_tradeoff():
     choice). b_J = J log2 U bits per update for the user index of each of
     the J >= U blocks and U ceil(log2 J) bits when J < U and the update
     names the block that each user weights. Stars mark the best J of each
-    curve."""
+    curve. At rho = 0.9 (dash-dotted, data/pm/pm_content_ov_j.csv, fs4, rows
+    role best, split test) the adapted masks with the overlap chosen for
+    rho = 0.9, updated every F = 100 frames (the overlap is a value of the
+    entry and adds no bits), and the static entry trained for the class and
+    rho = 0.9 at 10 dB (pm_content_fs.csv, static_trained, fs4) as a thin
+    line."""
     import math
     U_, V_ = 4, 30522
     pay = U_ * math.log2(V_)
@@ -459,6 +584,13 @@ def fig_tradeoff():
           and float(r["snr_db"]) == 10]
     assert len(st) == 1
     st = st[0]
+    ter_o = {int(r["J"]): float(r["ter"]) for r in rows("pm_content_ov_j.csv")
+             if r["channel"] == "fs4" and r["role"] == "best" and r["split"] == "test"}
+    st_o = [float(r["ter"]) for r in rows("pm_content_fs.csv")
+            if r["scheme"] == "static_trained" and r["channel"] == "fs4"
+            and float(r["snr_db"]) == 10 and abs(float(r["rho"]) - 0.9) < 1e-9]
+    assert len(st_o) == 1
+    st_o = st_o[0]
 
     def bits(v):
         return v * math.log2(U_) if v >= U_ else U_ * math.ceil(math.log2(v)) if v > 1 else 0.0
@@ -470,8 +602,8 @@ def fig_tradeoff():
     mk = STYLE["adapted"][1]                       # every curve is an adapted mask
     c_st = STYLE["static"][0]
     ax.axhline(st, color=c_st, lw=1.9, ls="-", zorder=1.8, label="_nolegend_")   # static entry, bold
-    ax.text(0.86, st * 1.13, "Static entry", color=c_st, fontweight="bold", fontsize=ANN43 + 0.5,
-            ha="left", va="bottom")
+    ax.text(0.86, st * 0.89, "Static", color=c_st, fontweight="bold", fontsize=ANN43 + 0.5,
+            ha="left", va="top")                    # below the line, clear of the rho = 0.9 curve
     best = {}
     for F, c_, ls, filled in F_STYLE:
         loss = [ter[v] + bits(v) / (F * pay) for v in xs]       # 1 - eta of eq. (9)
@@ -480,12 +612,24 @@ def fig_tradeoff():
         best[F] = (xs[k], loss[k])
         ax.plot([xs[k]], [loss[k]], ls="none", marker="*", ms=9, mfc="none", mec="k", mew=0.8,
                 label="Best $J$" if F == F_STYLE[-1][0] else "_nolegend_", zorder=4)
+    c_o, mk_o = STYLE["adapted_ov"]                 # rho = 0.9: overlap, F = 100
+    xo = sorted(ter_o)
+    loss_o = [ter_o[v] + bits(v) / (100 * pay) for v in xo]
+    ax.plot(xo, loss_o, color=c_o, marker=mk_o, ls="-.", mfc=c_o,
+            label=r"$F=100$, $\rho=0.9$")
+    ko = int(np.argmin(loss_o))
+    best["100, rho 0.9"] = (xo[ko], loss_o[ko])
+    ax.plot([xo[ko]], [loss_o[ko]], ls="none", marker="*", ms=9, mfc="none", mec="k", mew=0.8,
+            label="_nolegend_", zorder=4)
+    ax.axhline(st_o, color=c_st, lw=0.9, ls="-.", zorder=1.8, label="_nolegend_")
+    ax.text(0.86, st_o * 0.87, r"Static, $\rho=0.9$", color=c_st, fontsize=ANN43,
+            ha="left", va="top")
     ax.set_xscale("log", base=2)
     ax.set_yscale("log")
     ax.set_xticks([1, 2, 4, 8, 16, 32, 64])
     ax.set_xticklabels(["1", "2", "4", "8", "16", "32", "64"])
     ax.set_xlim(0.8, 80)
-    ax.set_ylim(2e-3, 4)
+    ax.set_ylim(5e-4, 4)                            # room below the curves for the legend
     ax.axvspan(0.8, U_, color="0.88", lw=0, zorder=0)           # J < U: the masks overlap
     ax.text(1.0, 2.2, "masks overlap,\n$J<U$", fontsize=ANN43, color="0.25", ha="left", va="center")
     xa = 22.6                                                   # on the F = 1 curve between J = 16 and 32
@@ -497,11 +641,11 @@ def fig_tradeoff():
     ax.set_xlabel("Mask size $J$ (values per mask)")
     ax.set_ylabel(r"Loss $1-\eta$ at 10 dB", labelpad=1.0)
     ax.grid(True, which="both")
-    legend_in(ax, loc="lower left", fontsize=LEG43, labelspacing=0.12,
-              borderpad=0.25)                       # one legend size with Figs. 2 and 3
+    legend_in(ax, loc="lower right", fontsize=LEG43, ncol=2, **LEGKW43)   # as Figs. 2 and 3
     save(fig, "fig5_pm.pdf", tight=False)
     print("Fig. 4: best J and loss per F:",
-          {F: (j, round(l, 4)) for F, (j, l) in best.items()}, "static entry", round(st, 4))
+          {F: (j, round(l, 4)) for F, (j, l) in best.items()}, "static entry", round(st, 4),
+          "static entry rho 0.9", round(st_o, 4))
 
 
 if __name__ == "__main__":

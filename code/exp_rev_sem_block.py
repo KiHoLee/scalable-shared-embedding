@@ -1,4 +1,4 @@
-"""Revision experiment R1.1 / R2.5: topic accuracy on the real AG News token
+"""Earlier design: topic accuracy on the real AG News token
 streams when one gain is held over several frames.
 
 exp_rev_semantic.py draws a new gain per frame, so token errors spread evenly

@@ -1,4 +1,4 @@
-"""Revision analysis R1.2/R2.4: masked-norm spread of the full codebook
+"""Earlier design, analysis: masked-norm spread of the full codebook
 after the long budget.
 
 Compares the masked codeword norms of the 4,000-iteration full codebook

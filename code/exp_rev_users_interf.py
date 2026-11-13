@@ -1,4 +1,4 @@
-"""Revision analysis R1.6: how much the residual interference matters as users are added.
+"""Earlier design, analysis: how much the residual interference matters as users are added.
 
 For the trained proposal at U = 2, 4, 8, 16 with the fixed frame d = 64, on the
 flat complex channel of rev_channel.py, evaluate the SER on paired frames with and

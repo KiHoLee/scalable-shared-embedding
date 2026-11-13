@@ -57,6 +57,12 @@ No mask is trained here; the static entries are the saved ones.
 
 Frames per point: coded OMA, static entry and adapted masks 200,000 below
 12 dB and 2,000,000 from 12 dB on; oma and ToDMA 200,000 at every SNR.
+Exception (part extra, table EXTRA): points with fewer than 20 token errors
+in 2,000,000 frames, which Fig. 2 does not draw, run longer at 8 taps: the
+adapted masks at 20 dB and coded OMA on the adapted blocks at 16, 18 and 20 dB
+(frames in EXTRA). Their first frames are chunked as the shorter runs, so
+the check rows compare the errors there with the released and the
+2,000,000-frame points.
 
 Seeds and chunking (those of the released parts, so that the first frames
 of every point equal a released point):
@@ -97,7 +103,10 @@ Parts (--part): oma, coded, todma, static, adapted (each writes
 data/pm/semfig2_parts/pm_semfig2_<part>.csv and _<part>_check.csv), merge
 (joins the five parts into data/pm/pm_semfig2.csv with columns channel,
 scheme, snr_db, frames, tokens, errors, ter, ser_sem, and
-data/pm/pm_semfig2_check.csv), all (the five parts, then merge).
+data/pm/pm_semfig2_check.csv, then puts in the rows of part extra when its
+file exists), all (the five parts, then merge), extra (the points of EXTRA
+with more frames; it writes pm_semfig2_extra.csv and _extra_check.csv and
+replaces their rows in data/pm/pm_semfig2.csv and pm_semfig2_check.csv).
 --channel fs4 or fs8 restricts a part to one channel (files
 pm_semfig2_<part>_<channel>.csv), so that the long parts can run as two
 processes; merge takes the file of a part or, without it, its two channel
@@ -107,6 +116,7 @@ frames), prints the check and writes nothing.
 
 Run from the code folder on a GPU:
     python exp_pm_semfig2.py --part all
+    python exp_pm_semfig2.py --part extra      # after all
     python exp_pm_semfig2.py --part static     # one part; then --part merge
     python exp_pm_semfig2.py --part adapted --channel fs8
     python exp_pm_semfig2.py --part oma --smoke
@@ -133,6 +143,13 @@ U = 4
 SNRS = list(range(0, 21, 2))
 CHANNELS = (("fs4", 4), ("fs8", 8))
 LO, HI = 200_000, 2_000_000
+FR_C16, FR_C18, FR_C20 = 20_000_000, 100_000_000, 1_000_000_000   # coded OMA, adapted blocks, 8 taps
+# Points with fewer than 20 token errors in HI frames, run with more frames:
+# (channel, scheme, snr_db) -> (frames, token errors of the HI-frame run)
+EXTRA = {("fs8", "adapted_B2", 20): (40_000_000, 4),
+         ("fs8", "coded_il_adapted", 16): (FR_C16, 11),
+         ("fs8", "coded_il_adapted", 18): (FR_C18, 1),
+         ("fs8", "coded_il_adapted", 20): (FR_C20, 0)}
 PARTS = ("oma", "coded", "todma", "static", "adapted")
 ORDER = ("oma", "coded_il_comb", "coded_il_adapted", "todma", "todma_unmatched",
          "static_class_L16", "adapted_B2")
@@ -182,13 +199,16 @@ class Acc:
         return [cn, scheme, snr, self.frames, tok, self.errors, self.errors / tok, self.sem / tok]
 
 
-def chunks(frames: int, size: int, ckpt: int):
+def chunks(frames: int, size: int, ckpt: int, ckpt2: int | None = None):
     """Chunk sizes of a run of `frames` frames whose first `ckpt` frames are
-    chunked as a released run of `ckpt` frames (full chunks, then the rest).
-    Yields (n, True when the checkpoint is reached)."""
+    chunked as a released run of `ckpt` frames (full chunks, then the rest)
+    and, when ckpt2 > ckpt is given, whose first ckpt2 frames are chunked as
+    a run of ckpt2 frames. Yields (n, True when the checkpoint ckpt is
+    reached)."""
     k = 0
     while k < frames:
-        n = min(size, frames - k, (ckpt - k) if k < ckpt else size)
+        nxt = ckpt if k < ckpt else (ckpt2 if ckpt2 is not None and k < ckpt2 else None)
+        n = min(size, frames - k, (nxt - k) if nxt is not None else size)
         k += n
         yield n, k == ckpt
 
@@ -284,15 +304,17 @@ def coded_table(ctx):
 
 
 @torch.no_grad()
-def run_coded(ctx, A, Mml, place, taps, snr, frames, ckpt):
-    """exp_pm_oma.run_point for the rm_il table alone."""
+def run_coded(ctx, A, Mml, place, taps, snr, frames, ckpt, ckpt2=None):
+    """exp_pm_oma.run_point for the rm_il table alone.
+    With ckpt2, acc.snap2 holds (frames, errors) after the first ckpt2 frames."""
     torch.manual_seed(9500 + 100 * taps + snr)
     S = po.K // U
     sig2 = 1.0 / (D * 10 ** (snr / 10))
     sig = math.sqrt(sig2)
     a = 1.0 / math.sqrt(D)
     acc, snap = Acc(ctx), None
-    for n, at in chunks(frames, po.CHUNK, ckpt):
+    acc.snap2 = None
+    for n, at in chunks(frames, po.CHUNK, ckpt, ckpt2):
         idx = torch.multinomial(ctx.pd, n * U, replacement=True).view(n, U)
         g = po.gains(n, U, taps)
         sub = po.subcarriers(place, g, sig2)
@@ -301,6 +323,8 @@ def run_coded(ctx, A, Mml, place, taps, snr, frames, ckpt):
         acc.add(idx, po.dec_ml(r, wt, Mml))
         if at:
             snap = acc.snap()
+        if ckpt2 is not None and acc.frames == ckpt2:
+            acc.snap2 = acc.snap()
     return acc, snap
 
 
@@ -353,14 +377,16 @@ def run_static(ctx, m, snr, cn, frames, ckpt, seed):
 
 
 @torch.no_grad()
-def run_adapted(ctx, E, c, snr, taps, frames, ckpt, seed=31):
-    """exp_pm_ext.run_adapt with B = 2, no water-filling, with the semantic cost."""
+def run_adapted(ctx, E, c, snr, taps, frames, ckpt, seed=31, ckpt2=None):
+    """exp_pm_ext.run_adapt with B = 2, no water-filling, with the semantic cost.
+    With ckpt2, acc.snap2 holds (frames, errors) after the first ckpt2 frames."""
     B = 2
     torch.manual_seed(seed + int(10 * snr) + 100 * taps + 7 * B)
     K = D // 2
     sig = math.sqrt(1.0 / (D * 10 ** (snr / 10)))
     acc, snap = Acc(ctx), None
-    for n, at in chunks(frames, 384, ckpt):
+    acc.snap2 = None
+    for n, at in chunks(frames, 384, ckpt, ckpt2):
         idx = px.sample(ctx.pd, n, U, 0.0)
         g = px.gains(n, taps, DEVICE)
         M = px.adaptive_masks(g, B, sig * sig, c, False)
@@ -376,6 +402,8 @@ def run_adapted(ctx, E, c, snr, taps, frames, ckpt, seed=31):
         acc.add(idx, sc.argmax(-1))
         if at:
             snap = acc.snap()
+        if ckpt2 is not None and acc.frames == ckpt2:
+            acc.snap2 = acc.snap()
     return acc, snap
 
 
@@ -448,7 +476,8 @@ def part_static(ctx, a, snrs, t0):
             emit(rows, chks, "static", a, t0, cn, "static_class_L16", snr, acc, snap, ref)
 
 
-def part_adapted(ctx, a, snrs, t0):
+def adapted_setup(ctx):
+    """Codebook (1) and the constant c of the adapted masks."""
     E = pm.codebook(ctx.src.W, D, "pwhite", pd=ctx.pdc).to(DEVICE)
     comb = torch.zeros(U, D, device=DEVICE)
     for u in range(U):
@@ -457,6 +486,11 @@ def part_adapted(ctx, a, snrs, t0):
     idx0 = px.sample(ctx.pd, 65536, U, 0.0)
     c = float(((E[idx0] * comb[None]).sum(1)).pow(2).sum(1).mean().sqrt())
     print(f"[adapted] c {c:.6f}", flush=True)
+    return E, c
+
+
+def part_adapted(ctx, a, snrs, t0):
+    E, c = adapted_setup(ctx)
     rows, chks = [], []
     for cn, taps in a.chans:
         for snr in snrs:
@@ -473,6 +507,65 @@ def read_rows(path):
         return [r for r in rd]
 
 
+def apply_extra(rows, chks):
+    """Rows of part extra in place of the same (channel, scheme, snr_db) rows,
+    and its check rows in place of the check rows of those points."""
+    p, q = PART_DIR / "pm_semfig2_extra.csv", PART_DIR / "pm_semfig2_extra_check.csv"
+    if not p.exists():
+        return rows, chks
+    ext = {tuple(r[:3]): r for r in read_rows(p)}
+    extc = read_rows(q)
+    keys = {tuple(r[:3]) for r in extc}
+    rows = [ext.get(tuple(str(x) for x in r[:3]), r) for r in rows]
+    chks = [r for r in chks if tuple(str(x) for x in r[:3]) not in keys] + extc
+    return rows, chks
+
+
+def part_extra(ctx, a, snrs, t0):
+    E = A = None
+    keep, keepc = [], []                       # rows of the other schemes of part extra (--only)
+    if a.only and not a.smoke and (PART_DIR / "pm_semfig2_extra.csv").exists():
+        keep = [r for r in read_rows(PART_DIR / "pm_semfig2_extra.csv") if r[1] != a.only]
+        keepc = [r for r in read_rows(PART_DIR / "pm_semfig2_extra_check.csv") if r[1] != a.only]
+    rows, chks = [], []
+    for (cn, scheme, snr), (fr, hi_err) in EXTRA.items():
+        if a.only and scheme != a.only:
+            continue
+        taps = dict(CHANNELS)[cn]
+        ref = ref_point(scheme, cn, snr)
+        frames = ref[1] if a.smoke else fr
+        ck2 = HI if (not a.smoke and ref[1] < HI) else None
+        if scheme == "adapted_B2":
+            if E is None:
+                E, c = adapted_setup(ctx)
+            acc, snap = run_adapted(ctx, E, c, snr, taps, frames, ref[1], ckpt2=ck2)
+        elif scheme == "coded_il_adapted":
+            if A is None:
+                A, Mml, _ = coded_table(ctx)
+            acc, snap = run_coded(ctx, A, Mml, "adapted", taps, snr, frames, ref[1], ckpt2=ck2)
+        else:
+            raise ValueError(scheme)
+        emit(rows, chks, "extra", a, t0, cn, scheme, snr, acc, snap, ref)
+        if acc.snap2 is not None:   # the first HI frames against the HI-frame run
+            chks.append(check_row(cn, scheme, snr, ("pm_semfig2.csv", HI, hi_err, hi_err / (U * HI)),
+                                  acc.snap2, rows[-1]))
+    if a.smoke:
+        return
+    rows, chks = keep + rows, keepc + chks
+    write_csv(PART_DIR / f"pm_semfig2_{tag('extra', a)}.csv", HDR, rows)
+    write_csv(PART_DIR / f"pm_semfig2_{tag('extra', a)}_check.csv", HDR_CHK, chks)
+    chan = {"fs4": 0, "fs8": 1}
+
+    def key(r):
+        return chan[r[0]], ORDER.index(r[1]), int(r[2])
+    all_rows, all_chks = apply_extra(read_rows(pm.DATA / "pm_semfig2.csv"),
+                                     read_rows(pm.DATA / "pm_semfig2_check.csv"))
+    all_chks.sort(key=key)
+    write_csv(pm.DATA / "pm_semfig2.csv", HDR, all_rows)
+    write_csv(pm.DATA / "pm_semfig2_check.csv", HDR_CHK, all_chks)
+    print("[extra] rows replaced in pm_semfig2.csv and pm_semfig2_check.csv", flush=True)
+
+
 def part_merge():
     rows, chks = [], []
     for p in PARTS:
@@ -481,6 +574,7 @@ def part_merge():
             rows += read_rows(PART_DIR / f"pm_semfig2_{t}.csv")
             chks += read_rows(PART_DIR / f"pm_semfig2_{t}_check.csv")
             print("[merge]", t, flush=True)
+    rows, chks = apply_extra(rows, chks)
     chan = {"fs4": 0, "fs8": 1}
 
     def key(r):
@@ -495,9 +589,10 @@ def part_merge():
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--part", required=True, choices=list(PARTS) + ["merge", "all"])
+    ap.add_argument("--part", required=True, choices=list(PARTS) + ["extra", "merge", "all"])
     ap.add_argument("--channel", default="both", choices=["both", "fs4", "fs8"])
     ap.add_argument("--smoke", action="store_true")
+    ap.add_argument("--only", default="", help="part extra: run only this scheme of EXTRA")
     a = ap.parse_args()
     a.chans = [c for c in CHANNELS if a.channel in ("both", c[0])]
     torch.backends.cuda.matmul.allow_tf32 = False             # evaluation in full fp32
@@ -512,7 +607,7 @@ def main():
         print(f"[setup] V {ctx.V} unk {ctx.unk} device {DEVICE} t={time.time() - t0:.0f}s", flush=True)
         snrs = [10] if a.smoke else SNRS
         fns = {"oma": part_oma, "coded": part_coded, "todma": part_todma,
-               "static": part_static, "adapted": part_adapted}
+               "static": part_static, "adapted": part_adapted, "extra": part_extra}
         for p in (PARTS if a.part == "all" else (a.part,)):
             fns[p](ctx, a, snrs, t0)
         if a.part == "all" and not a.smoke and a.channel == "both":

@@ -1,4 +1,4 @@
-"""Revision R1.2: closed form of the power normalizer c of the proposal against
+"""Earlier design: closed form of the power normalizer c of the proposal against
 its Monte Carlo value, the multiplication counts of both, and training with it.
 
 Model (sse_lib.SSE): y = (1/c) sum_u x_u with period p of x_u equal to
@@ -19,8 +19,8 @@ Output: data/rev_c_closedform.csv, with the multiplication counts per evaluation
 of c in the columns mult_*.
 
 Part 2, multiplication counts of a training step at b = 256, against the score
-MACs of the letter, and the ratios of Comment 1.2 at per step and cumulative
-level. The MC term is counted as mask products plus power squares, and as coded
+MACs of the letter, and their ratios per step and summed over
+training. The MC term is counted as mask products plus power squares, and as coded
 for the proposal also with the division by sqrt(P) per element.
 Output: data/rev_c_closedform_ops.csv
 

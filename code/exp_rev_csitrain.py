@@ -1,4 +1,4 @@
-"""Revision experiment R1.6 (mitigation): train the Proposed SSE through
+"""Earlier design, mitigation: train the Proposed SSE through
 the complex channel simulator of rev_channel.py with imperfect channel
 estimates (NMSE drawn per batch from the given value) and, optionally,
 frequency-selective fading, then evaluate it under the same conditions.

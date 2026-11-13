@@ -1,4 +1,4 @@
-"""Revision R2.1/R2.3: what closed form (9) can and cannot decide between the
+"""Earlier design: what closed form (9) can and cannot decide between the
 full codebook and the proposal at V = 65,536, U = 4, d = 64, 20 dB.
 
 For each trained run computes per user:

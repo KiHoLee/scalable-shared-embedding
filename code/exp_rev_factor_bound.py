@@ -1,4 +1,4 @@
-"""Revision R2.2/R2.6: load and budget checks of the factorizations that fail.
+"""Earlier design: load and budget checks of the factorizations that fail.
 
 Trains (Vu, P) at other loads and at a longer budget with train_sse, the
 procedure of exp_rev_factor_seeds.py, to test whether the failing runs of (4,8)

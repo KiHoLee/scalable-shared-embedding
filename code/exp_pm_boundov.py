@@ -33,25 +33,25 @@ part overlap -> data/pm/pm_boundov.csv
     full_rand    L = 64, full overlap with an independent random sign per user
                  and dimension (CPU generator seed 0, iota = 3)
   (a) rows test = pep_nn, pep_pw: the pairwise term (6) against Monte Carlo of
-      the same event Delta^T (z + n) < -||Delta||^2 / (2c) at the fixed gain
+      the same event xi^T (z + n) < -||xi||^2 / (2c) at the fixed gain
       h = 1 and SNR 0, 5, 10, 15, 20 dB. For every user u, 128 tokens v are
       drawn with p_v (CPU generator seed 100 + u); pep_nn pairs every v with
-      its 16 nearest tokens w in the masked distance ||Delta||, pep_pw with 4
+      its 16 nearest tokens w in the masked distance ||xi||, pep_pw with 4
       tokens w drawn with p_w. The interference z is sampled from 65,536
       frames of the other users' tokens (CUDA generator seed 200 + u), shared
       by all pairs of the user, and the noise is integrated in closed form:
-      pep_mc = mean_z Q((||Delta||^2/(2c) + Delta^T z) / (sigma ||Delta||)).
+      pep_mc = mean_z Q((||xi||^2/(2c) + xi^T z) / (sigma ||xi||)).
       pep_count draws the noise as well and counts the event. pep_gauss_emp
       is the Gaussian tail with the empirical mean and variance of
-      Delta^T z, so ratio_tail = pep_gauss_emp / pep_mc tests the Gaussian
+      xi^T z, so ratio_tail = pep_gauss_emp / pep_mc tests the Gaussian
       shape alone and ratio = pep_eq6 / pep_mc tests (6) with its analytic
       moments nu_u and Sigma_u (ratios of means over the pairs; ratio_med,
       ratio_q10 and ratio_q90 are per-pair quantiles of pep_eq6 / pep_mc over
       the pairs whose Monte Carlo standard error is below 10 percent).
       var_ratio is the median ratio of the empirical to the analytic variance
-      of Delta^T z, intf_share the mean share of the interference in the
+      of xi^T z, intf_share the mean share of the interference in the
       variance of (6), skew and exkurt the median skewness and excess kurtosis
-      of Delta^T z.
+      of xi^T z.
   (b) rows test = ser: the clipped SER and distortion bounds (5) on the 600
       tokens drawn with p_v of exp_pm.bound_eval (seed 5), at the fixed unit
       gain and averaged over Rayleigh fading (400 gain nodes), against
@@ -492,13 +492,13 @@ def token_bounds(E, pd, Wn, M, c, toks, snrs, batch=128):
         semw = (1 - Wn[vb] @ Wn.T).clamp_min(0).double()                       # (B,V)
         for u in range(U):
             Em, a, b, EA, q = pre[u]
-            n2 = a[vb][:, None] + a[None] - 2 * Em[vb] @ Em.T                    # ||Delta||^2
+            n2 = a[vb][:, None] + a[None] - 2 * Em[vb] @ Em.T                    # ||xi||^2
             ok = n2 > 1e-10
             ok[ar, vb] = False
             n_dup += int((~ok).sum()) - B
             n2 = n2.clamp_min(1e-10)
-            mean = b[vb][:, None] - b[None]                                      # Delta^T nu_u
-            var = (q[vb][:, None] + q[None] - 2 * EA[vb] @ Ed.T).clamp_min(0)    # Delta^T Sigma_u Delta
+            mean = b[vb][:, None] - b[None]                                      # xi^T nu_u
+            var = (q[vb][:, None] + q[None] - 2 * EA[vb] @ Ed.T).clamp_min(0)    # xi^T Sigma_u xi
             num = ac * n2 / 2 + mean
             sw = torch.where(ok, semw, torch.zeros_like(semw))
             cap = sw.max(1).values

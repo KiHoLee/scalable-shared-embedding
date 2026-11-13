@@ -1,4 +1,4 @@
-"""Revision R2.1: the growth law of Proposition 2 at exactly fixed kappa_u.
+"""Earlier design: the growth law of Proposition 2 at exactly fixed kappa_u.
 
 Reuses one trained unit codebook, its masks and c in frames of P periods with
 L = 16 fixed (d = 16 P), so that kappa_u is the same at every P, and holds the

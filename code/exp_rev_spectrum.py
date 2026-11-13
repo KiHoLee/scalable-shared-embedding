@@ -1,4 +1,4 @@
-"""Revision (reported model below OMA under flat fading): mechanism.
+"""Earlier design (reported model below OMA under flat fading): mechanism.
 
 Question. The reported model sse_P4.pt has kappa_u = 0.252 on average, almost
 the value 0.25 of OMA, yet its SER is below OMA at every SNR of Fig. 2.

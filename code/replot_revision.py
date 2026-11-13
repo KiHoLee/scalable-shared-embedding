@@ -1,6 +1,6 @@
-"""Replot script for the revised letter. Reuses the geometry, style
-dictionary, and save() of replot.py and writes the revised figures with
-the _revision suffix (the original figures stay untouched):
+"""Replot script for the earlier design. Reuses the geometry, style
+dictionary, and save() of replot.py and writes its figures with
+the _revision suffix (the figures of replot.py stay untouched):
 
   fig_conv_revision.pdf : SER at 10 dB versus cumulative training MACs
                           (mean of three training seeds),
@@ -240,7 +240,7 @@ def fig_scaling():
 
 
 def fig_norms():
-    """Letter Fig. R2: distribution of the masked candidate norms of the
+    """Supplementary figure: distribution of the masked candidate norms of the
     proposal relative to the per-user mean (rev_norms.csv, 64 values),
     with the full-codebook range (rev_norms_full.json) marked by its two
     extremes on the same axis."""

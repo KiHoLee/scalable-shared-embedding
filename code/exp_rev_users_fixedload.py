@@ -1,4 +1,4 @@
-"""Revision experiment R1.6 (fixed load): the number of users grows with
+"""Earlier design, fixed load: the number of users grows with
 the frame, d = 16U, so every user keeps 16 real dimensions per frame and
 16 index bits, as in the main configuration (U = 4, d = 64). Proposed
 SSE with Vu = 16 and P = 4 (L = 4U) is retrained per U under the main

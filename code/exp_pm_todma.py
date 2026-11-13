@@ -7,7 +7,7 @@ assigns them to the devices with the CSI as an anchor, and fills collisions
 by masked-token prediction. In the downlink frame of the letter (d = 64 real
 dimensions, V = 30,522 BERT tokens) an orthonormal codebook cannot exist and
 every receiver sees all tokens through its own single channel, so the
-reference is adapted as in the original submission:
+reference is adapted as in the earlier design:
   - every token has a fixed unit-norm random Gaussian codeword of length d,
     unrelated to its meaning (exp_pm.codebook kind "rand", seed 0, the
     codewords of the random-codebook reference); the frame is the plain sum

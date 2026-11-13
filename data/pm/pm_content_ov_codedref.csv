@@ -1,0 +1,2 @@
+channel,scheme,snr_db,frames,tokens,errors,ter,ser_sem
+flat,coded_il_comb,10,200000,800000,164174,0.2052175,0.1546908107

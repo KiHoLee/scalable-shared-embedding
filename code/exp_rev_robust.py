@@ -1,4 +1,4 @@
-"""Revision experiment R1.6: scalability in the number of users and
+"""Earlier design: scalability in the number of users and
 robustness to unequal average SNRs, imperfect channel estimates, and
 frequency-selective fading. All schemes pass through the common complex
 channel simulator of rev_channel.py at V = 65,536 and d = 64.

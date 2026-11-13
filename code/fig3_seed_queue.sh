@@ -6,7 +6,7 @@
 # The time_s columns of these runs reflect a shared GPU and are not used for
 # wall-clock statements. Afterwards rebuild the ten-seed means with
 #   python exp_rev_budget_eval.py --aggregate-only
-# The authors ran it with PYTHON=~/sse_rev/venv/bin/python GPU=1 N_PAR=4.
+# Example: PYTHON=/path/to/venv/bin/python GPU=1 N_PAR=4.
 cd "$(dirname "$0")" || exit 1
 PYTHON=${PYTHON:-python}
 export CUDA_VISIBLE_DEVICES=${GPU:-0}

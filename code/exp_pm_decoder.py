@@ -38,7 +38,7 @@ part decoders: SER (and semantic distortion 1 - cos of the BERT input
   w = |g_hat|^2 on both real dimensions of a subcarrier):
     rule4    : argmin_v sum_i w_i (r_i - s_{v,i})^2  (eq. (4), exp_pm.Masks.scores)
     md       : argmin_v ||r - s_v||^2  (unweighted minimum distance)
-    corr     : argmax_v r . (e_v (.) m_u)  (correlator of the original submission)
+    corr     : argmax_v r . (e_v (.) m_u)  (correlator of the earlier design)
     ncorr    : argmax_v r . (e_v (.) m_u) / ||e_v (.) m_u||  (normalized correlation)
     mismatch : Gaussian likelihood given the estimate (formula below), with
                the other users' signal as Gaussian interference of power q_i

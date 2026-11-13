@@ -30,7 +30,8 @@ part u4    : U = 4, the control: trained_10dB with seed 1 draws the masks
 part u8    : U = 8. Outputs data/pm/pm_content8_u8.{csv,json}.
 part merge : joins the two parts into data/pm/pm_content8.csv and
              data/pm/pm_content8.json and adds the coherent overlap
-             kappa_u = (1/d) sum_i m_{u,i} sum_{k!=u} m_{k,i}, the signed
+             kappa_u = (1/d) sum_i m_{u,i} sum_{k!=u} m_{k,i} (the signed
+             overlap gamma_u = m_u^T mbar_u / d of eq. (7) of the letter), the signed
              weight the other users place where user u has weight, which
              adds to its codeword when the token is shared (0 without
              overlap, U - 1 for full overlap, computed from the stored masks).
@@ -40,7 +41,7 @@ rho, snr_db, cross_energy (mean of iota_u), coherent_overlap (mean of
 kappa_u), ser, ser_shared, ser_indep, ser_user_min, ser_user_max,
 frames_shared, frames_indep (the per-part files lack coherent_overlap).
 pm_content8.json holds, per entry, the per-user cross-energies iota_u and
-coherent overlaps kappa_u, the per-user SER (total, shared, independent),
+coherent overlaps kappa_u (gamma_u of the letter), the per-user SER (total, shared, independent),
 the calibration constant c, the stored pattern of the trained masks (first
 L dimensions, 5 decimals) and the training time. No model file is written.
 On a shared GPU a CUDA out-of-memory error makes a training run restart

@@ -1,4 +1,4 @@
-"""Revision R2.2/R2.3/R2.6/R1.6: mechanism of every run of the factorization study.
+"""Earlier design: mechanism of every run of the factorization study.
 
 No training. Reads the 80 runs listed in data/rev_factor_seeds.csv and the six
 4,000-iteration runs sse_P4.pt, rev_sse_seed1..5 (U = 4, d = 64). Per run:

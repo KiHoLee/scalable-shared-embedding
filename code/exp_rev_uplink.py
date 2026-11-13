@@ -1,4 +1,4 @@
-"""Revision R1.6: near-far in an uplink with a separate gain per user, and the
+"""Earlier design: near-far in an uplink with a separate gain per user, and the
 mechanisms behind the robustness rows, on the released models (no training).
 
 Uplink model: z_k = sum_u g_u x_{u,k} + w_k, synchronous users, flat fading,

@@ -1,4 +1,4 @@
-"""Revision analysis R1.6: why the proposal fails as users are added.
+"""Earlier design, analysis: why the proposal fails as users are added.
 
 For the trained proposal at U = 2, 4, 8, 16 users, once with the fixed
 frame d = 64 (rev_sse_U{U}.pt, sse_P4.pt for U = 4) and once with the

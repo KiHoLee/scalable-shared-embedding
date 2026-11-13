@@ -32,7 +32,7 @@ fixed at 10 dB, training seed s).
 
 Parts (--part):
   content  Fig. 3. For rho in {0, 0.25, 0.5, 0.75, 0.9, 1}: masks without
-           overlap (comb pattern L = U, weight 2 on dimensions u, u + 4, ...),
+           overlap (comb pattern L = U, weight sqrt(U) on dimensions u, u + 4, ...),
            full overlap (all ones) and masks trained at 10 dB (L = 16, seed 1,
            the trained_at_snr masks of exp_pm_ext.py --part content_snr), each
            with ter and ser_sem in total and split into frames with a shared
@@ -51,6 +51,8 @@ Parts (--part):
            the mean cross-energy and c. A run whose signs cancel the frame of
            a shared token (c = 0, ZeroDivisionError in training) is kept as a
            failed run with nan values. Output data/pm/pm_semfig4_static.csv.
+           With --rho R only rho = R is trained, and the output goes to
+           data/pm/pm_semfig4_static_rho<R>.csv (Fig. 3 adds rho = 0.7 so).
 
 Trained masks (state dict of exp_pm.Masks, codebook included) go to
 data/pm/pm_models/sem_fig3_rho{rho}_L16_s1.pt and
@@ -63,6 +65,7 @@ data/pm/pm_models_smoke/.
 Run from the code folder on a GPU:
     python exp_pm_semfig34.py --part content     # data/pm/pm_semfig3.csv
     python exp_pm_semfig34.py --part static      # data/pm/pm_semfig4_static.csv
+    python exp_pm_semfig34.py --part static --rho 0.7   # data/pm/pm_semfig4_static_rho0.7.csv
     python exp_pm_semfig34.py --part static --smoke
 """
 from __future__ import annotations
@@ -184,6 +187,8 @@ def part_content(a, out_dir, models, tag):
 def part_static(a, out_dir, models, tag):
     src, E, pd, Wn = setup()
     rhos, Ls, seeds = ((0.0, 1.0), (16, 1), (1,)) if a.smoke else (RHOS, LS, SEEDS)
+    if a.rho is not None and not a.smoke:      # one extra rho, kept in its own file
+        rhos, tag = (a.rho,), f"{tag}_rho{a.rho:g}"
     hdr = ["scheme", "channel", "rho", "values", "seed", "frames"] \
         + [f"{k}_val" for k in KEYS] + list(KEYS) \
         + ["ter_shared", "ser_sem_shared", "ter_indep", "ser_sem_indep", "cross_energy", "c", "model"]
@@ -217,6 +222,7 @@ def main():
     ap.add_argument("--iters", type=int, default=3000)
     ap.add_argument("--frames", type=int, default=FRAMES)
     ap.add_argument("--smoke", action="store_true")
+    ap.add_argument("--rho", type=float, default=None, help="part static: train this rho only")
     a = ap.parse_args()
     out_dir, models, tag = pm.DATA, pm.MODELS, ""
     if a.smoke:                                   # keep smoke outputs apart from the real ones

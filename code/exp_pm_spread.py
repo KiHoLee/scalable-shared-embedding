@@ -8,8 +8,9 @@ orthogonal matrix R (seed 0), as in every experiment of the letter.
 
 For every token v with p_v > 0 the nearest other token w of the codebook
 (Euclidean distance over all V = 30,522 rows) gives the difference
-Delta = e_v - e_w. Real dimensions 2k and 2k+1 (0-based) form subcarrier k,
-k = 0..31, so a_k = Delta_{2k}^2 + Delta_{2k+1}^2 is the energy of the
+xi = e_v - e_w (the difference xi of the letter before the mask). Real
+dimensions 2k and 2k+1 (0-based) form subcarrier k,
+k = 0..31, so a_k = xi_{2k}^2 + xi_{2k+1}^2 is the energy of the
 difference on subcarrier k. The effective number of subcarriers is the
 participation ratio (sum_k a_k)^2 / sum_k a_k^2, which equals n when the
 energy is spread evenly over n subcarriers and one when it sits on one.

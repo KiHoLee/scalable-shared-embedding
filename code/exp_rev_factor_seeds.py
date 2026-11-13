@@ -1,4 +1,4 @@
-"""Revision R2.6/R2.2: run-to-run spread of the factorization comparison.
+"""Earlier design: run-to-run spread of the factorization comparison.
 
 Trains every (Vu, P) pair of the selection-rule discussion over ten seeds at
 the 4,000-iteration budget and reports SER, kappa_u, the largest off-diagonal

@@ -1,4 +1,4 @@
-"""Revision R1.6: OMA with rotated digits under flat and frequency-selective
+"""Earlier design: OMA with rotated digits under flat and frequency-selective
 fading, with no trained values. It answers whether the lead of the proposal
 over plain OMA in Table II is specific to the proposal.
 
@@ -40,12 +40,12 @@ L_min the smallest number of nonzero coordinates. Seeds follow exp_rev_robust.ru
 (777 + 10*snr), and frames is the number of frames per row.
 
 Which variant gives which values (T = 4, comb8, average SER at 10 / 20 / 30 dB):
-  C4  0.160 / 0.00043 / 1.1e-7    the review's 0.160 / 0.0004
-  K4  0.147 / 0.00094 / 8.3e-6    the review's 0.146 / 0.0010 (1e6 frames)
+  C4  0.160 / 0.00043 / 1.1e-7    an earlier estimate 0.160 / 0.0004
+  K4  0.147 / 0.00094 / 8.3e-6    an earlier estimate 0.146 / 0.0010 (1e6 frames)
   H4  0.155 / 0.0039  / 2.6e-4
   RND 0.174 / 0.00091 / 9.0e-7
 K4 leads at 10 dB, but its slope is that of two coordinates, against four for C4.
-The review's 0.183 / 0.005 for a Hadamard matrix is another layout, the trained
+The earlier estimate 0.183 / 0.005 for a Hadamard matrix is another layout, the trained
 mask supports of sse_P4.pt, and is not computed here.
 
 Output: data/rev_rot_oma.csv

@@ -1,4 +1,4 @@
-"""Revision R2.6 / Fig. R3: OMA at unit frame energy over the nine vocabularies
+"""Earlier design: OMA at unit frame energy over the nine vocabularies
 of the sweep, against the proposal.
 
 Convention. Section II fixes unit frame energy and gamma = 1/(d sigma^2) for all
@@ -17,7 +17,7 @@ ser*_logged for comparison only; scaling.csv itself is left as it is.
 
 Two bit counts are reported, and they differ only where V is not a power of two:
   ser10, ser16            real b = log2 V, the same real-valued b as the logged
-                          data (primary column, plotted in Fig. R3)
+                          data (primary column, the plotted one)
   ser10_ceil, ser16_ceil  integer B = ceil(log2 V) bits at the same frame energy
 ser*_mc is a dimension-level Monte Carlo of the integer case: 16 dimensions are
 split over B bits as evenly as possible, each bit carries energy 1/(U B), and
@@ -27,7 +27,7 @@ energy (energy_mc). At V = 16, 256, 4096, 65536 it is literal repetition (4, 2,
 
 Ratios are OMA over the proposal:
   ratio*_best   better of P = 2 and P = 4, single runs of scaling_sse_P.csv (the
-                proposal curve of Fig. R3)
+                plotted proposal curve)
   ratio*_ten    better of the two ten-run means, at 4,000 iterations each. The
                 runs are rev_factor_*.pt of exp_rev_factor_seeds.py and
                 exp_rev_factor_sweep.py where they exist and are trained here by

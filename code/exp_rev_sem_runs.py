@@ -1,4 +1,4 @@
-"""Revision experiment R1.1 / R2.5: topic accuracy on the real AG News token
+"""Earlier design: topic accuracy on the real AG News token
 streams for all six 4,000-iteration SSE runs, not only the reported one.
 
 The streams, the channel and the scoring are those of exp_rev_semantic.py,
@@ -18,7 +18,7 @@ Each scheme is decoded 8 times at 6, 10, 16 and 20 dB, with the seed
 SEED_EVAL + 1000 r + 10 snr of exp_rev_semantic.py. Repeats 0-3 therefore use
 the seeds of data/rev_semantic.csv, which was computed on another machine. The
 full codebook and ToDMA, drawn in small chunks, reproduce that file exactly on
-u24; SSE and OMA, drawn in one large tensor, reproduce it only in distribution.
+the machine of these runs; SSE and OMA, drawn in one large tensor, reproduce it only in distribution.
 
 Metrics: token error rate (ter), topic accuracy against the dataset label
 (acc), agreement with the label the classifier gives the error-free text

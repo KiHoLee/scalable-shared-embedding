@@ -1,4 +1,4 @@
-"""Revision R1.2: SNR gap of the proposal to the full codebook with minimum
+"""Earlier design: SNR gap of the proposal to the full codebook with minimum
 distance decoding, against the vocabulary, at 10 and 16 dB, flat Rayleigh channel
 of sse_lib. The gap at SNR s is s minus the SNR at which the full-codebook curve
 reaches the SER of the proposal at s (log-SER interpolation on a 1 dB grid).

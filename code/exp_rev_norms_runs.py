@@ -1,4 +1,4 @@
-"""Revision R1.4: masked-norm spread over the runs beyond the reported model.
+"""Earlier design: masked-norm spread over the runs beyond the reported model.
 
 No training. For each run, ||b_i . mu_u|| relative to its per-user mean, as in
 exp_rev_analysis (A1) and exp_rev_full_long_norms.py, and the coefficient of

@@ -1,4 +1,4 @@
-"""Revision experiment R1.2 / R2.4: training-budget matched comparisons at
+"""Earlier design: training-budget matched comparisons at
 V = 65,536.
 
 Trains, under the same optimizer, batch, SNR range, and loss family:

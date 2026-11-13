@@ -1,7 +1,7 @@
-"""Revision R2.6: ten-run sweep of the factorizations behind the selection rule.
+"""Earlier design: ten-run sweep of the factorizations behind the selection rule.
 
-Same procedure as exp_rev_factor_seeds.py, for the pairs of Fig. R3 that file
-does not cover: (Vu, P) = (3,4), (9,2), (4,4), (16,2), (5,4), (25,2), (10,4),
+Same procedure as exp_rev_factor_seeds.py, for the pairs of the OMA comparison
+(exp_rev_oma_sweep.py) that file does not cover: (Vu, P) = (3,4), (9,2), (4,4), (16,2), (5,4), (25,2), (10,4),
 (100,2), (12,4), (144,2), that is V = 81, 256, 625, 10,000 and 20,736 with
 P = 2 and P = 4. U = 4, d = 64, 4,000 iterations, seeds 1-10, 1e6 frames per
 SNR. Each row holds SER, kappa_u, the largest off-diagonal entry of the mask

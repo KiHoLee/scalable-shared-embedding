@@ -1,4 +1,4 @@
-"""Revision R1.3/R1.6: decomposition of the frame energy on the real streams and
+"""Earlier design: decomposition of the frame energy on the real streams and
 the largest cosine between masks. No training.
 
 Output: data/rev_energy_decomp.json

@@ -1,14 +1,14 @@
-"""Revision: the reported model on fresh evaluation seeds, and the best-of-six
+"""Earlier design: the reported model on fresh evaluation seeds, and the best-of-six
 procedure with selection and reporting kept apart.
 
 Question. The reported model (sse_P4.pt) is the training-seed-1 run of the
-original submission. During the revision it ranked first of six 4,000-iteration
+first study. Later it ranked first of six 4,000-iteration
 runs (with rev_sse_seed1..5.pt, trained afterwards on a CPU by exp_rev_seeds.py).
 Its Fig. 2 and Table I SERs and that ranking come from one evaluation protocol,
 eval_ser_sse of sse_lib.py: digits from a CPU generator seeded 777 + int(10*snr),
 gains and noise from the global generator of the device (CUDA for exp_main.py
 after set_seed(1), 2e6 frames; CPU for exp_rev_seeds.py after training, 5e5
-frames). The objection is that the ranking shares the test evaluation. This script re-evaluates all
+frames). The ranking thus shares the test evaluation. This script re-evaluates all
 runs on seeds that no script of the project has used.
 
 Setup. U = 4, d = 64, Vu = 16, P = 4, V = 65,536, flat Rayleigh fading with

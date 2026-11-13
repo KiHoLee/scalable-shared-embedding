@@ -1,6 +1,6 @@
-"""Revision: re-evaluation of the full codebook with exact minimum-distance
+"""Earlier design: re-evaluation of the full codebook with exact minimum-distance
 (MD) decoding. The trained full codebooks (data/full_V*.pt, the same
-4,000-iteration models as the original letter) have unequal masked
+4,000-iteration models as the first study) have unequal masked
 codeword norms, so the correlation rule is not minimum-distance for
 them. MD decoding uses the known scale 1/c and the precomputable norms.
 

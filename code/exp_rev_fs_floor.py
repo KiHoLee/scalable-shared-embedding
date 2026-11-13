@@ -1,4 +1,4 @@
-"""Revision R1.6: error floor of the proposal under frequency-selective fading.
+"""Earlier design: error floor of the proposal under frequency-selective fading.
 Table II stops at 20 dB. This script extends the frequency-selective rows in
 SNR and over the training runs.
 

@@ -1,7 +1,7 @@
-"""Symbol error rate of the untrained comb pattern against the vocabulary size.
+"""Token error rate (TER) of the untrained comb pattern against the vocabulary size.
 
 Nothing is trained. Every user sends one token per frame on the comb pattern
-without overlap (L = U = 4: user u puts weight 2 on the real dimensions
+without overlap (L = U = 4: user u puts weight sqrt(U) on the real dimensions
 u, u + 4, u + 8, ..., so ||m_u||^2 = d = 64), the codebook is the pwhite
 codebook of exp_pm.codebook (whitening under the token frequencies p_v,
 top 64 eigenpairs, fixed rotation with generator seed 0, unit-norm rows),

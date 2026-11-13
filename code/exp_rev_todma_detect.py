@@ -1,4 +1,4 @@
-"""Revision experiment R1.2: how far the ToDMA row depends on its detector,
+"""Earlier design: how far the ToDMA row depends on its detector,
 and what causes its high-SNR error floor.
 
 The transmitter, channel, and scoring are those of exp_sota.todma_ser

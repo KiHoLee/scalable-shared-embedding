@@ -1,4 +1,4 @@
-"""Revision R1.6: other factorizations at U = 8, d = 64 (load 2 bits per dimension).
+"""Earlier design: other factorizations at U = 8, d = 64 (load 2 bits per dimension).
 
 Trains (Vu,P) = (256,2), (4,8), (2,16) over seeds 1-6 at the 4,000-iteration
 budget, plus (256,2) with seed 1 at ten times that budget, under the letter's real

@@ -1,4 +1,4 @@
-"""Revision: SNR gap against the full codebook outside the main operating point,
+"""Earlier design: SNR gap against the full codebook outside the main operating point,
 on the Table II channel. Output: data/rev_gap_curves.csv and rev_gap_db.csv.
 The gap at the SER of the proposal is read by log-SER interpolation of the
 full-codebook curve."""
